@@ -25,7 +25,7 @@
         <div id="root"></div>
 
         <script type="text/babel">
-			var	list = [{name: 'pen',  cost: '10$', foto: 'url_1', quantity: '5'},
+			var	list = [{name: 'pen',  	   cost: '10$', foto: 'url_1', quantity: '5'},
 						{name: 'pencil',   cost: '2$', foto: 'url_2', quantity: '6'},
 						{name: 'book',	   cost: '3$', foto: 'url_3', quantity: '7'},
 						{name: 'notebook', cost: '4$', foto: 'url_4', quantity: '8'}];
