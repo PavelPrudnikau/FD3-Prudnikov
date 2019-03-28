@@ -1,0 +1,10 @@
+
+.FilterList
+{
+    padding-top: 5px;
+}
+
+.FilterList select
+{
+    width: 300px;
+}
