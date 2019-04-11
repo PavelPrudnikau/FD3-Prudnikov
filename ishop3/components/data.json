@@ -1,0 +1,4 @@
+[
+    {"id": 1,	"name": "pen",      "price": 10, "url": "url_1", "quantity": 5},
+    {"id": 2,	"name": "pencil",   "price": 2,  "url": "url_2", "quantity": 6}
+]

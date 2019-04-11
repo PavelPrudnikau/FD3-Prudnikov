@@ -1,0 +1,14 @@
+.ShoppingList table {
+    border-collapse: collapse;
+    }
+
+.ShoppingList td, th {
+    width: 110px;
+    padding: 3px;
+    border: 1px solid black;
+    text-align: center;
+    }
+
+.ShoppingList .selected {
+    background-color: cadetblue;
+    }
