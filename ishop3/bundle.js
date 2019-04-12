@@ -25726,82 +25726,111 @@ var ShoppingList = function (_React$Component) {
 
         return _ret = (_temp = (_this = _possibleConstructorReturn(this, (_ref = ShoppingList.__proto__ || Object.getPrototypeOf(ShoppingList)).call.apply(_ref, [this].concat(args))), _this), _this.state = {
             actualSelectedId: 0,
-            actualGoodsList: [],
+            actualGoodsList: _this.props.originGoodsList,
+            //actualGoodsList: [],
             actualProduct: {},
             headerName: "",
             workMode: 0,
             isTableBlocked: false //any product is modified
         }, _this.addProductForm = function () {
+            _this.GetProductArray();
             if (_this.state.isTableBlocked) {
                 return;
             }
             console.log('Добавление продукта ');
-            _this.state.headerName = "";
-            if (_this.props.headerName.add) {
-                _this.state.headerName = _this.props.headerName.add;
-            }
-            _this.state.actualSelectedId = 0;
-            _this.state.buttonName = "Add";
+
+            _this.setState({ headerName: "" });
+            _this.setState({ headerName: _this.props.headerName.add });
+            _this.setState({ buttonName: "Add" });
+            _this.setState({ actualSelectedId: 0 });
             _this.setState({ workMode: 1 });
         }, _this.editProductForm = function (productId) {
+            // this.GetProductArray();   
             console.log('Изменение продукта - ' + productId);
             _this.state.actualGoodsList.forEach(function (product, index, arr) {
                 if (product.id == productId) {
-                    _this.state.headerName = "";
-                    if (_this.props.headerName.edit) {
-                        _this.state.headerName = _this.props.headerName.edit;
-                    }
-                    _this.state.buttonName = "Save";
-                    _this.state.actualProduct = product;
-                    _this.state.actualSelectedId = productId;
-                    _this.setState({ workMode: 2 });
+                    /*this.setState( {headerName: this.props.headerName.edit} );
+                    this.setState( {buttonName: "Save"} );
+                    this.setState( {actualProduct: product} );
+                    this.setState( {actualSelectedId: productId} );
+                    this.setState( {workMode: 2} );
+                    return;
+                    */
+                    _this.setState(function (prevState, props) {
+                        return { headerName: _this.props.headerName.edit };
+                    });
+                    _this.setState(function (prevState, props) {
+                        return { buttonName: "Save" };
+                    });
+                    _this.setState(function (prevState, props) {
+                        return { actualProduct: product };
+                    });
+                    _this.setState(function (prevState, props) {
+                        return { actualSelectedId: productId };
+                    });
+                    _this.setState(function (prevState, props) {
+                        return { workMode: 2 };
+                    });
                     return;
                 };
             });
         }, _this.selectProductForm = function (productId) {
+            //this.GetProductArray();
             console.log('Выбор продукта - ' + productId);
             _this.state.actualGoodsList.forEach(function (product, index, arr) {
                 if (product.id == productId) {
-                    _this.state.headerName = product.name;
-                    _this.state.actualProduct = product;
-                    _this.state.actualSelectedId = productId;
+                    _this.setState({ headerName: product.name });
+                    _this.setState({ actualProduct: product });
+                    _this.setState({ actualSelectedId: productId });
                     _this.setState({ workMode: 3 });
                     return;
                 };
             });
         }, _this.productDeleted = function (productId) {
+            //this.GetProductArray();
             console.log('Продукт удален - ' + productId);
 
             //change actual product list
             var tempGoodsList = [];
             _this.state.actualGoodsList.forEach(function (product, index, arr) {
                 if (product.id != productId) {
-                    tempGoodsList.push(product);
+                    //tempGoodsList.push(product);
                 };
             });
-            _this.state.actualGoodsList = tempGoodsList;
+
+            _this.setState({ actualGoodsList: tempGoodsList });
             _this.setState({ workMode: 0 });
         }, _this.productSaved = function (NewProductData) {
-            var tempGoodsList = [];
+            console.log("BEGIN_productSaved_func");
+            _this.state.actualGoodsList.forEach(function (product, index, arr) {
+                console.log(product.id + ', ' + product.name + ', ' + product.price + ', ' + product.url + ', ' + product.quantity);
+            });
+
+            var tempGoodsList = _this.state.actualGoodsList;
             if (_this.state.workMode == 1) {
                 //Add
                 console.log('Продукт добавлен - ' + NewProductData.id);
-                //tempGoodsList = this.state.actualGoodsList;
-                _this.state.actualGoodsList.push(NewProductData);
+                //tempGoodsList.forEach((product, index, arr) => {
+                //    tempGoodsList.push(product);
+                // });
+                tempGoodsList.push(NewProductData);
             } else if (_this.state.workMode == 2) {
                 //Edit
                 console.log('Продукт изменен - ' + NewProductData.id);
-                _this.state.actualGoodsList.forEach(function (product, index, arr) {
+                tempGoodsList.map(function (product, index, arr) {
                     if (product.id == NewProductData.id) {
-                        tempGoodsList.push(NewProductData);
-                    } else {
-                        tempGoodsList.push(product);
-                    };
+                        tempGoodsList[index] = NewProductData;
+                    }
                 });
             }
-            _this.state.actualGoodsList = tempGoodsList;
-            _this.state.actualSelectedId = NewProductData.id;
+            _this.setState({ actualSelectedId: NewProductData.id });
             _this.setState({ workMode: 0 });
+            _this.setState({ actualGoodsList: tempGoodsList });
+            //this.setState( (prevState, props) => { return {actualGoodsList: tempGoodsList}; } );
+            console.log("END_productSaved_func");
+            _this.state.actualGoodsList.forEach(function (product, index, arr) {
+                console.log(product.id + ', ' + product.name + ', ' + product.price + ', ' + product.url + ', ' + product.quantity);
+            });
         }, _this.productCanceled = function (v) {
             _this.setState({ workMode: 0 });
         }, _this.tableBlocked = function (v) {
@@ -25811,14 +25840,24 @@ var ShoppingList = function (_React$Component) {
     }
 
     _createClass(ShoppingList, [{
-        key: 'render',
-        value: function render() {
+        key: 'GetProductArray',
+        value: function GetProductArray() {
             var _this2 = this;
 
-            console.log('RENDER');
             if (this.state.actualGoodsList.length == 0) {
-                this.state.actualGoodsList = this.props.originGoodsList;
+                //this.state.actualGoodsList = this.props.originGoodsList;
+                this.setState(function (prevState, props) {
+                    return { actualGoodsList: _this2.props.originGoodsList };
+                });
             }
+        }
+    }, {
+        key: 'render',
+        value: function render() {
+            var _this3 = this;
+
+            //console.log('RENDER');
+
 
             var goods = this.state.actualGoodsList.map(function (v) {
                 return _react2.default.createElement(_ShoppingProduct2.default, {
@@ -25828,11 +25867,11 @@ var ShoppingList = function (_React$Component) {
                     price: v.price,
                     url: v.url,
                     quantity: v.quantity,
-                    selectedId: _this2.state.actualSelectedId,
-                    isBlocked: _this2.state.isTableBlocked,
-                    cbDeleted: _this2.productDeleted,
-                    cbSelected: _this2.selectProductForm,
-                    cbEdit: _this2.editProductForm
+                    selectedId: _this3.state.actualSelectedId,
+                    isBlocked: _this3.state.isTableBlocked,
+                    cbDeleted: _this3.productDeleted,
+                    cbSelected: _this3.selectProductForm,
+                    cbEdit: _this3.editProductForm
                 });
             });
 
@@ -25900,14 +25939,11 @@ var ShoppingList = function (_React$Component) {
                     price: this.state.actualProduct.price,
                     url: this.state.actualProduct.url,
                     quantity: this.state.actualProduct.quantity,
-                    headerName: this.state.headerName
-                    //buttonName={this.state.buttonName}    //depend of mode
-                    //product={this.state.actualProduct}
-
-                    , cbDataSave: this.productSaved,
+                    headerName: this.state.headerName,
+                    cbDataSave: this.productSaved,
                     cbDataCancel: this.productCanceled,
-                    cbBlockTable: this.tableBlocked
-                    //newProductID={this.state.actualGoodsList.length + 1}
+                    cbBlockTable: this.tableBlocked,
+                    product: this.state.actualProduct
                 })
             );
         }
@@ -26777,8 +26813,8 @@ var ProductInfo = function (_React$Component) {
         }
 
         return _ret = (_temp = (_this = _possibleConstructorReturn(this, (_ref = ProductInfo.__proto__ || Object.getPrototypeOf(ProductInfo)).call.apply(_ref, [this].concat(args))), _this), _this.state = {
-            //tempProduct: null,
             tempProduct: { id: '', name: '', price: '', url: '', quantity: '' },
+            //tempProduct: {},
             name: '',
             price: '',
             url: '',
@@ -26787,12 +26823,14 @@ var ProductInfo = function (_React$Component) {
         }, _this.save = function () {
             //передать новые данные продукта наверх и перерендерить        
             //-->
+            //this.setState( {tempProduct: this.props.id} );
             _this.state.tempProduct.id = _this.props.id;
             _this.state.name ? _this.state.tempProduct.name = _this.state.name : _this.state.tempProduct.name = _this.props.name;
             _this.state.price ? _this.state.tempProduct.price = _this.state.price : _this.state.tempProduct.price = _this.props.price;
             _this.state.url ? _this.state.tempProduct.url = _this.state.url : _this.state.tempProduct.url = _this.props.url;
             _this.state.quantity ? _this.state.tempProduct.quantity = _this.state.quantity : _this.state.tempProduct.quantity = _this.props.quantity;
             //
+
             _this.props.cbDataSave(_this.state.tempProduct);
             _this.props.cbBlockTable(false);
         }, _this.cancel = function () {
@@ -26801,15 +26839,20 @@ var ProductInfo = function (_React$Component) {
         }, _this.productChanged = function (EO) {
 
             if (EO.target.name == "InfoName") {
-                _this.state.name = EO.target.value;
+                //this.state.name = EO.target.value;
+                _this.setState({ name: EO.target.value });
             } else if (EO.target.name == "InfoPrice") {
-                _this.state.price = parseInt(EO.target.value);
+                //this.state.price = parseInt(EO.target.value);
+                _this.setState({ price: parseInt(EO.target.value) });
             } else if (EO.target.name == "InfoUrl") {
-                _this.state.url = EO.target.value;
+                //this.state.url = EO.target.value;
+                _this.setState({ url: EO.target.value });
             } else if (EO.target.name == "InfoQuantity") {
-                _this.state.quantity = parseInt(EO.target.value);
+                // this.state.quantity = parseInt(EO.target.value);
+                _this.setState({ quantity: parseInt(EO.target.value) });
             }
-            _this.state.saveBlocked = false;
+            //this.state.saveBlocked = false;
+            _this.setState({ saveBlocked: false });
             _this.props.cbBlockTable(true);
         }, _temp), _possibleConstructorReturn(_this, _ret);
     }
@@ -26849,17 +26892,11 @@ var ProductInfo = function (_React$Component) {
                         _react2.default.createElement(
                             'span',
                             null,
-                            'Name '
+                            'Name: '
                         ),
                         this.props.workMode == 1 && _react2.default.createElement('input', { type: 'text', name: 'InfoName', className: '', onChange: this.productChanged }),
                         this.props.workMode == 2 && _react2.default.createElement('input', { type: 'text', name: 'InfoName', className: '', onChange: this.productChanged, defaultValue: this.props.name }),
-                        this.props.workMode == 3 && _react2.default.createElement(
-                            'span',
-                            null,
-                            'Name: ',
-                            this.props.name,
-                            ' '
-                        )
+                        this.props.workMode == 3 && this.props.name
                     ),
                     _react2.default.createElement('br', null),
                     _react2.default.createElement(
@@ -26868,17 +26905,11 @@ var ProductInfo = function (_React$Component) {
                         _react2.default.createElement(
                             'span',
                             null,
-                            'Price '
+                            'Price: '
                         ),
                         this.props.workMode == 1 && _react2.default.createElement('input', { type: 'text', name: 'InfoPrice', className: '', onChange: this.productChanged }),
                         this.props.workMode == 2 && _react2.default.createElement('input', { type: 'text', name: 'InfoPrice', className: '', onChange: this.productChanged, defaultValue: this.props.price }),
-                        this.props.workMode == 3 && _react2.default.createElement(
-                            'span',
-                            null,
-                            'Name: ',
-                            this.props.price,
-                            ' '
-                        )
+                        this.props.workMode == 3 && this.props.price
                     ),
                     _react2.default.createElement('br', null),
                     _react2.default.createElement(
@@ -26887,17 +26918,11 @@ var ProductInfo = function (_React$Component) {
                         _react2.default.createElement(
                             'span',
                             null,
-                            'Url '
+                            'Url: '
                         ),
                         this.props.workMode == 1 && _react2.default.createElement('input', { type: 'text', name: 'InfoUrl', className: '', onChange: this.productChanged }),
                         this.props.workMode == 2 && _react2.default.createElement('input', { type: 'text', name: 'InfoUrl', className: '', onChange: this.productChanged, defaultValue: this.props.url }),
-                        this.props.workMode == 3 && _react2.default.createElement(
-                            'span',
-                            null,
-                            'Name: ',
-                            this.props.url,
-                            ' '
-                        )
+                        this.props.workMode == 3 && this.props.url
                     ),
                     _react2.default.createElement('br', null),
                     _react2.default.createElement(
@@ -26906,22 +26931,16 @@ var ProductInfo = function (_React$Component) {
                         _react2.default.createElement(
                             'span',
                             null,
-                            'Quantity '
+                            'Quantity: '
                         ),
                         this.props.workMode == 1 && _react2.default.createElement('input', { type: 'text', name: 'InfoQuantity', className: '', onChange: this.productChanged }),
                         this.props.workMode == 2 && _react2.default.createElement('input', { type: 'text', name: 'InfoQuantity', className: '', onChange: this.productChanged, defaultValue: this.props.quantity }),
-                        this.props.workMode == 3 && _react2.default.createElement(
-                            'span',
-                            null,
-                            'Name: ',
-                            this.props.quantity,
-                            ' '
-                        )
+                        this.props.workMode == 3 && this.props.quantity
                     ),
                     _react2.default.createElement('br', null),
                     this.props.workMode == 1 && _react2.default.createElement('input', { type: 'button', value: 'Add', onClick: this.save, disabled: this.state.saveBlocked }),
-                    this.props.workMode == 2 && _react2.default.createElement('input', { type: 'button', value: 'Edit', onClick: this.save, disabled: this.state.saveBlocked }),
-                    !this.props.workMode == 3 && _react2.default.createElement('input', { type: 'button', value: 'Cancel', onClick: this.cancel })
+                    this.props.workMode == 2 && _react2.default.createElement('input', { type: 'button', value: 'Save', onClick: this.save, disabled: this.state.saveBlocked }),
+                    this.props.workMode != 3 && _react2.default.createElement('input', { type: 'button', value: 'Cancel', onClick: this.cancel })
                 );
             }
         }
@@ -26931,10 +26950,8 @@ var ProductInfo = function (_React$Component) {
 }(_react2.default.Component);
 
 ProductInfo.propTypes = {
-    workMode: _propTypes2.default.number.isRequired, //1 - add product, 2 - edit product, 3 - select product 
-    //product:        PropTypes.object,
+    workMode: _propTypes2.default.number.isRequired, //1 - add product, 2 - edit product, 3 - select product
     headerName: _propTypes2.default.string.isRequired,
-    //buttonName:     PropTypes.string,
     id: _propTypes2.default.number,
     name: _propTypes2.default.string,
     price: _propTypes2.default.number,
@@ -26942,80 +26959,16 @@ ProductInfo.propTypes = {
     quantity: _propTypes2.default.number,
     cbDataSave: _propTypes2.default.func.isRequired,
     cbDataCancel: _propTypes2.default.func.isRequired,
-    cbBlockTable: _propTypes2.default.func.isRequired
-    //newProductID:   PropTypes.number,
+    cbBlockTable: _propTypes2.default.func.isRequired,
+    product: _propTypes2.default.object
 };
 exports.default = ProductInfo;
-
-/*else if ( this.props.workMode==2) {
-    return (
-        (this.props.product) &&
-        <div className='ProductInfo' key={this.props.product.id}>
-            <h1> {this.props.headerName} </h1>
-            <label>
-                <span>ID: {this.props.product.id} </span>
-            </label>
-            <br/>
-            <label>
-                <span>Name </span>
-                <input type='text' name='InfoName' className=''
-                    defaultValue={this.props.product ? this.props.product.name : ""} 
-                    onChange={this.productChanged}
-                />
-            </label>
-            <br/>
-            <label>
-                <span>Price </span>
-                <input type='text' name='InfoPrice' className=''
-                    defaultValue={this.props.product ? this.props.product.price : ""}
-                    onChange={this.productChanged}
-                />
-            </label>
-            <br/>
-            <label>
-                <span>Url </span>
-                <input type='text' name='InfoUrl' className=''
-                    defaultValue={this.props.product ? this.props.product.url : ""}
-                    onChange={this.productChanged}
-                />
-            </label>
-            <br/>
-            <label>
-                <span>Quantity </span>
-                <input type='text' name='InfoQuantity' className=''
-                    defaultValue={this.props.product ? this.props.product.quantity : ""}
-                    onChange={this.productChanged}
-                />
-            </label>
-            <br/>
-            <input type='button' value={this.props.buttonName} onClick={this.save} />
-            <input type='button' value='Cancel' onClick={this.cancel} />
-        </div>
-    )
-}
-else if( this.props.workMode==3 ) {
-    return (
-        (this.props.product) &&
-        <div className='ProductInfo' key={this.props.product.id}>
-            <h1> {this.props.headerName} </h1>
-            <span>ID: {this.props.product.id} </span><br/>
-            <span>Name: {this.props.product.name} </span><br/>
-            <span>Price: {this.props.product.price} </span><br/>
-            <span>Url: {this.props.product.url} </span><br/>
-            <span>Quantity: {this.props.product.quantity} </span><br/>                    
-        </div>
-    );
-}
-else {
-    return null;
-}
-*/
 
 /***/ }),
 /* 32 */
 /***/ (function(module, exports) {
 
-module.exports = [{"id":1,"name":"pen","price":10,"url":"url_1","quantity":5},{"id":2,"name":"pencil","price":2,"url":"url_2","quantity":6},{"id":3,"name":"book","price":3,"url":"url_3","quantity":7},{"id":4,"name":"pencil2","price":2,"url":"url_4","quantity":8},{"id":5,"name":"book2","price":3,"url":"url_5","quantity":9},{"id":6,"name":"notebook","price":4,"url":"url_6","quantity":10}]
+module.exports = [{"id":1,"name":"pen","price":10,"url":"url_1","quantity":5},{"id":2,"name":"pencil","price":2,"url":"url_2","quantity":6}]
 
 /***/ })
 /******/ ]);

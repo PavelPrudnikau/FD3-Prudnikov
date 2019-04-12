@@ -14,28 +14,27 @@ class ProductInfo extends React.Component {
         cbDataSave:     PropTypes.func.isRequired,
         cbDataCancel:   PropTypes.func.isRequired,
         cbBlockTable:   PropTypes.func.isRequired,
+        product:        PropTypes.object,
     }
 
     state = {
-        tempProduct: {id: '', name: '', price: '', url: '', quantity: ''},
-        name:        '',
-        price:       '',
-        url:         '',
-        quantity:    '',
+        name:        this.props.name,
+        price:       this.props.price,
+        url:         this.props.url,
+        quantity:    this.props.quantity,
         saveBlocked: true,
     }
 
     save = () => {
-        //передать новые данные продукта наверх и перерендерить        
-        //-->
-        this.state.tempProduct.id = this.props.id;
-        this.state.name ? this.state.tempProduct.name = this.state.name : this.state.tempProduct.name = this.props.name;
-        this.state.price ? this.state.tempProduct.price = this.state.price : this.state.tempProduct.price = this.props.price;
-        this.state.url ? this.state.tempProduct.url = this.state.url : this.state.tempProduct.url = this.props.url;
-        this.state.quantity ? this.state.tempProduct.quantity = this.state.quantity : this.state.tempProduct.quantity = this.props.quantity;
-        //
-        this.props.cbDataSave(this.state.tempProduct);
-        this.props.cbBlockTable(false);
+        let tempProduct = {id: '', name: '', price: '', url: '', quantity: ''};
+        tempProduct.id = this.props.id;
+        tempProduct.name = this.state.name;
+        tempProduct.price = this.state.price;
+        tempProduct.url = this.state.url;    
+        tempProduct.quantity = this.state.quantity;
+
+        this.props.cbDataSave(tempProduct);
+        this.props.cbBlockTable(false);  
       }
 
     cancel = () => {
@@ -43,21 +42,20 @@ class ProductInfo extends React.Component {
         this.props.cbBlockTable(false);
     }
 
-    productChanged = (EO) => {
-        
+    productChanged = (EO) => {        
         if (EO.target.name == "InfoName") {
-            this.state.name = EO.target.value;
+            this.setState( {name: EO.target.value} );
         }
         else if (EO.target.name == "InfoPrice") {
-            this.state.price = parseInt(EO.target.value);
+            this.setState( {price: parseInt(EO.target.value)} );
         }
         else if (EO.target.name == "InfoUrl") {
-            this.state.url = EO.target.value;
+            this.setState( {url: EO.target.value} );
         }
         else if (EO.target.name == "InfoQuantity") {
-            this.state.quantity = parseInt(EO.target.value);
+            this.setState( {quantity: parseInt(EO.target.value)} );
         }
-        this.state.saveBlocked = false;
+        this.setState( {saveBlocked: false} );
         this.props.cbBlockTable(true);
     }
     
@@ -77,29 +75,29 @@ class ProductInfo extends React.Component {
                     <label>
                         <span>Name: </span>
                         {this.props.workMode==1 && <input type='text' name='InfoName' className='' onChange={this.productChanged}/>}
-                        {this.props.workMode==2 && <input type='text' name='InfoName' className='' onChange={this.productChanged} defaultValue={this.props.name}/>}
-                        {this.props.workMode==3 && this.props.name }
+                        {this.props.workMode==2 && <input type='text' name='InfoName' className='' onChange={this.productChanged} defaultValue={this.state.name}/>}
+                        {this.props.workMode==3 && this.state.name }
                     </label>
                     <br/>
                     <label>
                         <span>Price: </span>
                         {this.props.workMode==1 && <input type='text' name='InfoPrice' className='' onChange={this.productChanged}/>}
-                        {this.props.workMode==2 && <input type='text' name='InfoPrice' className='' onChange={this.productChanged} defaultValue={this.props.price}/>}
-                        {this.props.workMode==3 && this.props.price }
+                        {this.props.workMode==2 && <input type='text' name='InfoPrice' className='' onChange={this.productChanged} defaultValue={this.state.price}/>}
+                        {this.props.workMode==3 && this.state.price }
                     </label>
                     <br/>
                     <label>
                         <span>Url: </span>
                         {this.props.workMode==1 && <input type='text' name='InfoUrl' className='' onChange={this.productChanged}/>}
-                        {this.props.workMode==2 && <input type='text' name='InfoUrl' className='' onChange={this.productChanged} defaultValue={this.props.url}/>}
-                        {this.props.workMode==3 && this.props.url }
+                        {this.props.workMode==2 && <input type='text' name='InfoUrl' className='' onChange={this.productChanged} defaultValue={this.state.url}/>}
+                        {this.props.workMode==3 && this.state.url }
                     </label>
                     <br/>
                     <label>
                         <span>Quantity: </span>
                         {this.props.workMode==1 && <input type='text' name='InfoQuantity' className='' onChange={this.productChanged}/>}
-                        {this.props.workMode==2 && <input type='text' name='InfoQuantity' className='' onChange={this.productChanged} defaultValue={this.props.quantity}/>}
-                        {this.props.workMode==3 && this.props.quantity }
+                        {this.props.workMode==2 && <input type='text' name='InfoQuantity' className='' onChange={this.productChanged} defaultValue={this.state.quantity}/>}
+                        {this.props.workMode==3 && this.state.quantity }
                     </label>
                     <br/>
                     {this.props.workMode==1 && <input type='button' value="Add"  onClick={this.save} disabled={this.state.saveBlocked}/>}

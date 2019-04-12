@@ -16,7 +16,7 @@ class ShoppingList extends React.Component {
     
     state = {
         actualSelectedId: 0,
-        actualGoodsList: [],
+        actualGoodsList: this.props.originGoodsList,
         actualProduct: {},
         headerName: "",
         workMode: 0,
@@ -28,27 +28,26 @@ class ShoppingList extends React.Component {
             return;
         }
         console.log('Добавление продукта ');
-        this.state.headerName = "";
-        if (this.props.headerName.add) {
-            this.state.headerName = this.props.headerName.add;
-        }
-        this.state.actualSelectedId = 0;
-        this.state.buttonName = "Add";
+
+        this.setState( {headerName: ""} );
+        this.setState( {headerName: this.props.headerName.add} );
+        this.setState( {buttonName: "Add"} );
+        this.setState( {actualSelectedId: 0} );
         this.setState( {workMode: 1} );
     }
 
-    editProductForm = ( productId ) => {     
+    editProductForm = ( productId ) => {  
         console.log('Изменение продукта - ' + productId); 
-        this.state.actualGoodsList.forEach((product, index, arr) => {
+
+        let tempGoodsList = this.state.actualGoodsList.slice(); // make a copy
+
+        tempGoodsList.forEach((product, index, arr) => {
             if ( product.id == productId ) {
-                this.state.headerName = "";
-                if (this.props.headerName.edit) {
-                    this.state.headerName = this.props.headerName.edit;
-                }
-                this.state.buttonName = "Save";
-                this.state.actualProduct = product;
-                this.state.actualSelectedId = productId;
-                this.setState( {workMode: 2} );
+                this.setState( (prevState, props) => { return {headerName: this.props.headerName.edit}; } ); 
+                this.setState( (prevState, props) => { return {buttonName: "Save"}; } ); 
+                this.setState( (prevState, props) => { return {actualProduct: product}; } ); 
+                this.setState( (prevState, props) => { return {actualSelectedId: productId}; } ); 
+                this.setState( (prevState, props) => { return {workMode: 2}; } );
                 return;
             };
         });
@@ -56,11 +55,14 @@ class ShoppingList extends React.Component {
 
     selectProductForm = ( productId ) => {  
         console.log('Выбор продукта - ' + productId);
-        this.state.actualGoodsList.forEach((product, index, arr) => {
+
+        let tempGoodsList = this.state.actualGoodsList.slice(); // make a copy
+
+        tempGoodsList.forEach((product, index, arr) => {
             if ( product.id == productId ) {
-                this.state.headerName = product.name;
-                this.state.actualProduct = product;
-                this.state.actualSelectedId = productId;
+                this.setState( {headerName: product.name} );
+                this.setState( {actualProduct: product} );
+                this.setState( {actualSelectedId: productId} );
                 this.setState( {workMode: 3} );
                 return;
             };
@@ -71,49 +73,36 @@ class ShoppingList extends React.Component {
         console.log('Продукт удален - ' + productId); 
         
         //change actual product list
-        var tempGoodsList = [];
-        this.state.actualGoodsList.forEach((product, index, arr) => {
-            if ( product.id != productId ) {
-                tempGoodsList.push(product);
-            };
+        let tempGoodsList = this.state.actualGoodsList.slice(); // make a copy
+
+        tempGoodsList.filter((product, index, arr) => {
+            product.id != productId;
         });
-        this.state.actualGoodsList = tempGoodsList;
+
+        this.setState( {actualGoodsList: tempGoodsList} );
         this.setState( {workMode: 0} );
     }
 
     productSaved = ( NewProductData ) => {
-        console.log("BEGIN_productSaved_func"); 
-        this.state.actualGoodsList.forEach((product, index, arr) => {
-            console.log(product.id + ', ' + product.name + ', ' + product.price + ', ' + product.url + ', ' + product.quantity);   
-        });
 
-        var tempGoodsList = [];
+        let tempGoodsList = this.state.actualGoodsList.slice(); // make a copy
+
         if (this.state.workMode == 1) {         //Add
             console.log('Продукт добавлен - ' + NewProductData.id); 
-            //tempGoodsList = this.state.actualGoodsList;
-            this.state.actualGoodsList.push(NewProductData);
+            tempGoodsList.push(NewProductData);
         }
         else if(this.state.workMode == 2) {     //Edit
             console.log('Продукт изменен - ' + NewProductData.id); 
-            this.state.actualGoodsList.forEach((product, index, arr) => {
+            tempGoodsList.forEach((product, index, arr) => {
                 if ( product.id == NewProductData.id ) {
-                    tempGoodsList.push(NewProductData);
+                    tempGoodsList[index] = NewProductData;
                 }
-                else {
-                    tempGoodsList.push(product);
-                };
-            });
-        }  
-      
-        this.state.actualGoodsList = tempGoodsList;
-        
-        console.log("END_productSaved_func"); 
-        this.state.actualGoodsList.forEach((product, index, arr) => {
-            console.log(product.id + ', ' + product.name + ', ' + product.price + ', ' + product.url + ', ' + product.quantity);   
-        });
 
-        this.state.actualSelectedId = NewProductData.id;
+            });
+        }
+        this.setState( {actualSelectedId: NewProductData.id} );
         this.setState( {workMode: 0} );
+        this.setState( {actualGoodsList: tempGoodsList} );
     }
 
     productCanceled = ( v ) => {     
@@ -126,14 +115,7 @@ class ShoppingList extends React.Component {
     }
 
     render() {
-        //console.log('RENDER'); 
-        if (this.state.actualGoodsList.length == 0) {
-            this.state.actualGoodsList = this.props.originGoodsList;
-            this.state.actualGoodsList.forEach((product, index, arr) => {
-                console.log(product.id + ', ' + product.name + ', ' + product.price + ', ' + product.url + ', ' + product.quantity);   
-            });            
-        }
-
+        
         var goods=this.state.actualGoodsList.map( v =>
             <ShoppingProduct 
                 key={v.id}
@@ -172,6 +154,7 @@ class ShoppingList extends React.Component {
                 cbDataSave={this.productSaved}
                 cbDataCancel={this.productCanceled}
                 cbBlockTable={this.tableBlocked}
+                product={this.state.actualProduct}
                 />
             </div>
         );
