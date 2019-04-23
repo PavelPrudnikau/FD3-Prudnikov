@@ -654,7 +654,7 @@ var _ShoppingList2 = _interopRequireDefault(_ShoppingList);
 function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { default: obj }; }
 
 var ishopName = 'Books shop';
-var list = __webpack_require__(32);
+var list = __webpack_require__(33);
 var headers = { edit: 'Edit existing product:',
   add: 'Add new product:'
 };
@@ -25713,151 +25713,112 @@ function _inherits(subClass, superClass) { if (typeof superClass !== "function" 
 var ShoppingList = function (_React$Component) {
     _inherits(ShoppingList, _React$Component);
 
-    function ShoppingList() {
-        var _ref;
-
-        var _temp, _this, _ret;
-
+    function ShoppingList(props) {
         _classCallCheck(this, ShoppingList);
 
-        for (var _len = arguments.length, args = Array(_len), _key = 0; _key < _len; _key++) {
-            args[_key] = arguments[_key];
-        }
+        var _this = _possibleConstructorReturn(this, (ShoppingList.__proto__ || Object.getPrototypeOf(ShoppingList)).call(this, props));
 
-        return _ret = (_temp = (_this = _possibleConstructorReturn(this, (_ref = ShoppingList.__proto__ || Object.getPrototypeOf(ShoppingList)).call.apply(_ref, [this].concat(args))), _this), _this.state = {
-            actualSelectedId: 0,
-            actualGoodsList: _this.props.originGoodsList,
-            //actualGoodsList: [],
-            actualProduct: {},
-            headerName: "",
-            workMode: 0,
-            isTableBlocked: false //any product is modified
-        }, _this.addProductForm = function () {
-            _this.GetProductArray();
-            if (_this.state.isTableBlocked) {
-                return;
-            }
+        _this.addProductForm = function () {
             console.log('Добавление продукта ');
 
-            _this.setState({ headerName: "" });
-            _this.setState({ headerName: _this.props.headerName.add });
-            _this.setState({ buttonName: "Add" });
-            _this.setState({ actualSelectedId: 0 });
-            _this.setState({ workMode: 1 });
-        }, _this.editProductForm = function (productId) {
-            // this.GetProductArray();   
+            _this.setState({
+                headerName: _this.props.headerName.add,
+                buttonName: "Add",
+                actualSelectedId: 0,
+                workMode: 1
+            });
+        };
+
+        _this.editProductForm = function (productId) {
             console.log('Изменение продукта - ' + productId);
-            _this.state.actualGoodsList.forEach(function (product, index, arr) {
-                if (product.id == productId) {
-                    /*this.setState( {headerName: this.props.headerName.edit} );
-                    this.setState( {buttonName: "Save"} );
-                    this.setState( {actualProduct: product} );
-                    this.setState( {actualSelectedId: productId} );
-                    this.setState( {workMode: 2} );
-                    return;
-                    */
-                    _this.setState(function (prevState, props) {
-                        return { headerName: _this.props.headerName.edit };
-                    });
-                    _this.setState(function (prevState, props) {
-                        return { buttonName: "Save" };
-                    });
-                    _this.setState(function (prevState, props) {
-                        return { actualProduct: product };
-                    });
-                    _this.setState(function (prevState, props) {
-                        return { actualSelectedId: productId };
-                    });
-                    _this.setState(function (prevState, props) {
-                        return { workMode: 2 };
-                    });
-                    return;
-                };
+
+            _this.setState({
+                actualSelectedId: productId,
+                workMode: 2,
+                headerName: _this.props.headerName.edit,
+                buttonName: "Save"
             });
-        }, _this.selectProductForm = function (productId) {
-            //this.GetProductArray();
-            console.log('Выбор продукта - ' + productId);
-            _this.state.actualGoodsList.forEach(function (product, index, arr) {
-                if (product.id == productId) {
-                    _this.setState({ headerName: product.name });
-                    _this.setState({ actualProduct: product });
-                    _this.setState({ actualSelectedId: productId });
-                    _this.setState({ workMode: 3 });
-                    return;
-                };
+        };
+
+        _this.selectProductForm = function (selectedId) {
+            console.log('Выбран продукт - ' + selectedId);
+
+            _this.setState({
+                actualSelectedId: selectedId,
+                workMode: 3,
+                headerName: ""
             });
-        }, _this.productDeleted = function (productId) {
-            //this.GetProductArray();
+        };
+
+        _this.productDeleted = function (productId) {
             console.log('Продукт удален - ' + productId);
 
             //change actual product list
             var tempGoodsList = [];
-            _this.state.actualGoodsList.forEach(function (product, index, arr) {
-                if (product.id != productId) {
-                    //tempGoodsList.push(product);
+            _this.state.actualGoodsList.forEach(function (elem, index, arr) {
+                if (elem.id != productId) {
+                    tempGoodsList.push(elem);
                 };
             });
 
             _this.setState({ actualGoodsList: tempGoodsList });
             _this.setState({ workMode: 0 });
-        }, _this.productSaved = function (NewProductData) {
-            console.log("BEGIN_productSaved_func");
-            _this.state.actualGoodsList.forEach(function (product, index, arr) {
-                console.log(product.id + ', ' + product.name + ', ' + product.price + ', ' + product.url + ', ' + product.quantity);
-            });
+        };
 
-            var tempGoodsList = _this.state.actualGoodsList;
+        _this.productSaved = function (NewProduct) {
+
+            var tempGoodsList = _this.state.actualGoodsList.slice(); // make a copy
+
             if (_this.state.workMode == 1) {
                 //Add
-                console.log('Продукт добавлен - ' + NewProductData.id);
-                //tempGoodsList.forEach((product, index, arr) => {
-                //    tempGoodsList.push(product);
-                // });
-                tempGoodsList.push(NewProductData);
+                console.log('Продукт добавлен - ' + NewProduct.id);
+                tempGoodsList.push(NewProduct);
+                _this.setState({
+                    actualGoodsList: tempGoodsList,
+                    actualSelectedId: NewProduct.id,
+                    workMode: 0,
+                    LastId: NewProduct.id
+                });
+                return;
             } else if (_this.state.workMode == 2) {
                 //Edit
-                console.log('Продукт изменен - ' + NewProductData.id);
-                tempGoodsList.map(function (product, index, arr) {
-                    if (product.id == NewProductData.id) {
-                        tempGoodsList[index] = NewProductData;
-                    }
+                console.log('Продукт изменен - ' + NewProduct.id);
+
+                tempGoodsList = tempGoodsList.map(function (product) {
+                    if (product.id != NewProduct.id) return product;else return NewProduct;
+                });
+                _this.setState({
+                    actualGoodsList: tempGoodsList,
+                    actualSelectedId: NewProduct.id,
+                    workMode: 0
                 });
             }
-            _this.setState({ actualSelectedId: NewProductData.id });
+        };
+
+        _this.productCanceled = function (v) {
             _this.setState({ workMode: 0 });
-            _this.setState({ actualGoodsList: tempGoodsList });
-            //this.setState( (prevState, props) => { return {actualGoodsList: tempGoodsList}; } );
-            console.log("END_productSaved_func");
-            _this.state.actualGoodsList.forEach(function (product, index, arr) {
-                console.log(product.id + ', ' + product.name + ', ' + product.price + ', ' + product.url + ', ' + product.quantity);
-            });
-        }, _this.productCanceled = function (v) {
-            _this.setState({ workMode: 0 });
-        }, _this.tableBlocked = function (v) {
+        };
+
+        _this.tableBlocked = function (v) {
             console.log('Блокировка таблицы ' + v);
             _this.setState({ isTableBlocked: v });
-        }, _temp), _possibleConstructorReturn(_this, _ret);
+        };
+
+        _this.state = { actualGoodsList: _this.props.originGoodsList,
+            actualSelectedId: 0,
+            actualProduct: {},
+            headerName: "",
+            workMode: 0, //1 - add product, 2 - edit product, 3 - select product
+            isTableBlocked: false,
+            LastId: _this.props.originGoodsList.length
+        };
+        return _this;
     }
 
     _createClass(ShoppingList, [{
-        key: 'GetProductArray',
-        value: function GetProductArray() {
-            var _this2 = this;
-
-            if (this.state.actualGoodsList.length == 0) {
-                //this.state.actualGoodsList = this.props.originGoodsList;
-                this.setState(function (prevState, props) {
-                    return { actualGoodsList: _this2.props.originGoodsList };
-                });
-            }
-        }
-    }, {
         key: 'render',
         value: function render() {
-            var _this3 = this;
-
-            //console.log('RENDER');
-
+            var _this2 = this;
 
             var goods = this.state.actualGoodsList.map(function (v) {
                 return _react2.default.createElement(_ShoppingProduct2.default, {
@@ -25867,13 +25828,24 @@ var ShoppingList = function (_React$Component) {
                     price: v.price,
                     url: v.url,
                     quantity: v.quantity,
-                    selectedId: _this3.state.actualSelectedId,
-                    isBlocked: _this3.state.isTableBlocked,
-                    cbDeleted: _this3.productDeleted,
-                    cbSelected: _this3.selectProductForm,
-                    cbEdit: _this3.editProductForm
+                    selectedId: _this2.state.actualSelectedId,
+                    isBlocked: _this2.state.isTableBlocked,
+                    cbDeleted: _this2.productDeleted,
+                    cbSelected: _this2.selectProductForm,
+                    cbEdit: _this2.editProductForm
                 });
             });
+            //get actual product
+            var product = void 0;
+            if (this.state.workMode !== 1) {
+                //Edit, Select
+                product = this.state.actualGoodsList.find(function (product) {
+                    return product.id == _this2.state.actualSelectedId;
+                });
+            } else {
+                //Add
+                product = { id: this.state.LastId + 1, name: '', price: '', url: '', quantity: '' };
+            }
 
             return _react2.default.createElement(
                 'div',
@@ -25929,21 +25901,16 @@ var ShoppingList = function (_React$Component) {
                             goods
                         )
                     ),
-                    _react2.default.createElement('input', { className: 'AddButton', type: 'button', value: 'Add', onClick: this.addProductForm, disabled: this.state.isTableBlocked })
+                    _react2.default.createElement('input', { className: 'AddButton', type: 'button', value: 'New product', onClick: this.addProductForm, disabled: this.state.isTableBlocked })
                 ),
                 _react2.default.createElement('br', null),
-                _react2.default.createElement(_ProductInfo2.default, {
+                this.state.workMode != 0 && _react2.default.createElement(_ProductInfo2.default, {
+                    product: product,
                     workMode: this.state.workMode,
-                    id: this.state.workMode == 1 ? this.state.actualGoodsList.length + 1 : this.state.actualProduct.id,
-                    name: this.state.actualProduct.name,
-                    price: this.state.actualProduct.price,
-                    url: this.state.actualProduct.url,
-                    quantity: this.state.actualProduct.quantity,
                     headerName: this.state.headerName,
                     cbDataSave: this.productSaved,
                     cbDataCancel: this.productCanceled,
-                    cbBlockTable: this.tableBlocked,
-                    product: this.state.actualProduct
+                    cbBlockTable: this.tableBlocked
                 })
             );
         }
@@ -26780,6 +26747,8 @@ Object.defineProperty(exports, "__esModule", {
     value: true
 });
 
+var _extends = Object.assign || function (target) { for (var i = 1; i < arguments.length; i++) { var source = arguments[i]; for (var key in source) { if (Object.prototype.hasOwnProperty.call(source, key)) { target[key] = source[key]; } } } return target; };
+
 var _createClass = function () { function defineProperties(target, props) { for (var i = 0; i < props.length; i++) { var descriptor = props[i]; descriptor.enumerable = descriptor.enumerable || false; descriptor.configurable = true; if ("value" in descriptor) descriptor.writable = true; Object.defineProperty(target, descriptor.key, descriptor); } } return function (Constructor, protoProps, staticProps) { if (protoProps) defineProperties(Constructor.prototype, protoProps); if (staticProps) defineProperties(Constructor, staticProps); return Constructor; }; }();
 
 var _react = __webpack_require__(1);
@@ -26789,6 +26758,8 @@ var _react2 = _interopRequireDefault(_react);
 var _propTypes = __webpack_require__(3);
 
 var _propTypes2 = _interopRequireDefault(_propTypes);
+
+__webpack_require__(32);
 
 function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { default: obj }; }
 
@@ -26812,46 +26783,79 @@ var ProductInfo = function (_React$Component) {
             args[_key] = arguments[_key];
         }
 
-        return _ret = (_temp = (_this = _possibleConstructorReturn(this, (_ref = ProductInfo.__proto__ || Object.getPrototypeOf(ProductInfo)).call.apply(_ref, [this].concat(args))), _this), _this.state = {
-            tempProduct: { id: '', name: '', price: '', url: '', quantity: '' },
-            //tempProduct: {},
-            name: '',
-            price: '',
-            url: '',
-            quantity: '',
-            saveBlocked: true
+        return _ret = (_temp = (_this = _possibleConstructorReturn(this, (_ref = ProductInfo.__proto__ || Object.getPrototypeOf(ProductInfo)).call.apply(_ref, [this].concat(args))), _this), _this.state = { // сработает при построении компонента (constructor+WM+DM)
+            name: _this.props.product.name,
+            price: _this.props.product.price,
+            url: _this.props.product.url,
+            quantity: _this.props.product.quantity,
+            product: _this.props.product,
+            saveBlocked: true,
+            errName: "",
+            errPrice: "",
+            errUrl: "",
+            errQuantity: ""
+        }, _this.componentDidUpdate = function (oldProps, oldState) {
+            console.log('componentDidUpdate');
+            if (oldProps.product !== _this.props.product && _this.state.saveBlocked) {
+                _this.setState({ // сработает при обновлении компонента
+                    name: _this.props.product.name,
+                    price: _this.props.product.price,
+                    url: _this.props.product.url,
+                    quantity: _this.props.product.quantity,
+                    product: _this.props.product
+                });
+            }
         }, _this.save = function () {
-            //передать новые данные продукта наверх и перерендерить        
-            //-->
-            //this.setState( {tempProduct: this.props.id} );
-            _this.state.tempProduct.id = _this.props.id;
-            _this.state.name ? _this.state.tempProduct.name = _this.state.name : _this.state.tempProduct.name = _this.props.name;
-            _this.state.price ? _this.state.tempProduct.price = _this.state.price : _this.state.tempProduct.price = _this.props.price;
-            _this.state.url ? _this.state.tempProduct.url = _this.state.url : _this.state.tempProduct.url = _this.props.url;
-            _this.state.quantity ? _this.state.tempProduct.quantity = _this.state.quantity : _this.state.tempProduct.quantity = _this.props.quantity;
-            //
+            var tempProduct = _extends({}, _this.state.product, { name: _this.state.name, price: parseInt(_this.state.price), url: _this.state.url, quantity: parseInt(_this.state.quantity)
+            });
+            _this.checkData();
 
-            _this.props.cbDataSave(_this.state.tempProduct);
-            _this.props.cbBlockTable(false);
+            if (!_this.state.saveBlocked) {
+                _this.props.cbDataSave(tempProduct);
+                _this.props.cbBlockTable(false);
+            }
         }, _this.cancel = function () {
             _this.props.cbDataCancel();
             _this.props.cbBlockTable(false);
+        }, _this.checkData = function (EO) {
+
+            var isError = false;
+            //if (EO.target.name == "InfoName") {
+            if (typeof _this.state.name != "string" || _this.state.name == "") {
+                _this.setState({ errName: "Value must be a string" });
+                isError = true;
+            } else _this.setState({ errName: "" });
+            //}
+            // else if (EO.target.name == "InfoPrice") {
+            if (isNaN(_this.state.price) || _this.state.price < 0 || _this.state.price == "") {
+                _this.setState({ errPrice: "Value must be a number greater than 0" });
+                isError = true;
+            } else _this.setState({ errPrice: "" });
+            //}
+            // else if (EO.target.name == "InfoUrl") {
+            if (_this.state.url.indexOf('http://') < 0 || _this.state.url == "") {
+                _this.setState({ errUrl: "Value shoud have 'http://' " });
+                isError = true;
+            } else _this.setState({ errUrl: "" });
+            // }
+            //else if (EO.target.name == "InfoQuantity") {
+            if (isNaN(_this.state.quantity) || _this.state.quantity < 0 || _this.state.quantity == "") {
+                _this.setState({ errQuantity: "Value must be a positive integer" });
+                isError = true;
+            } else _this.setState({ errQuantity: "" });
+            //}
+            _this.setState({ saveBlocked: isError });
         }, _this.productChanged = function (EO) {
 
             if (EO.target.name == "InfoName") {
-                //this.state.name = EO.target.value;
                 _this.setState({ name: EO.target.value });
             } else if (EO.target.name == "InfoPrice") {
-                //this.state.price = parseInt(EO.target.value);
-                _this.setState({ price: parseInt(EO.target.value) });
+                _this.setState({ price: EO.target.value });
             } else if (EO.target.name == "InfoUrl") {
-                //this.state.url = EO.target.value;
                 _this.setState({ url: EO.target.value });
             } else if (EO.target.name == "InfoQuantity") {
-                // this.state.quantity = parseInt(EO.target.value);
-                _this.setState({ quantity: parseInt(EO.target.value) });
+                _this.setState({ quantity: EO.target.value });
             }
-            //this.state.saveBlocked = false;
             _this.setState({ saveBlocked: false });
             _this.props.cbBlockTable(true);
         }, _temp), _possibleConstructorReturn(_this, _ret);
@@ -26866,12 +26870,12 @@ var ProductInfo = function (_React$Component) {
             } else {
                 return _react2.default.createElement(
                     'div',
-                    { className: 'ProductInfo', key: this.props.id },
+                    { className: 'ProductInfo', key: this.props.product.id },
                     _react2.default.createElement(
                         'h1',
                         null,
                         ' ',
-                        this.props.headerName,
+                        this.props.headerName ? this.props.headerName : this.props.product.name,
                         ' '
                     ),
                     _react2.default.createElement(
@@ -26881,7 +26885,7 @@ var ProductInfo = function (_React$Component) {
                             'span',
                             null,
                             'ID: ',
-                            this.props.id,
+                            this.props.product.id,
                             ' '
                         )
                     ),
@@ -26891,12 +26895,17 @@ var ProductInfo = function (_React$Component) {
                         null,
                         _react2.default.createElement(
                             'span',
-                            null,
+                            { className: 'inputName' },
                             'Name: '
                         ),
-                        this.props.workMode == 1 && _react2.default.createElement('input', { type: 'text', name: 'InfoName', className: '', onChange: this.productChanged }),
-                        this.props.workMode == 2 && _react2.default.createElement('input', { type: 'text', name: 'InfoName', className: '', onChange: this.productChanged, defaultValue: this.props.name }),
-                        this.props.workMode == 3 && this.props.name
+                        this.props.workMode == 1 && _react2.default.createElement('input', { type: 'text', name: 'InfoName', className: '', onChange: this.productChanged, onBlur: this.checkData }),
+                        this.props.workMode == 2 && _react2.default.createElement('input', { type: 'text', name: 'InfoName', className: '', onChange: this.productChanged, onBlur: this.checkData, value: this.state.name }),
+                        this.props.workMode == 3 && this.state.name,
+                        _react2.default.createElement(
+                            'span',
+                            { className: 'error' },
+                            this.state.errName
+                        )
                     ),
                     _react2.default.createElement('br', null),
                     _react2.default.createElement(
@@ -26904,12 +26913,17 @@ var ProductInfo = function (_React$Component) {
                         null,
                         _react2.default.createElement(
                             'span',
-                            null,
+                            { className: 'inputName' },
                             'Price: '
                         ),
-                        this.props.workMode == 1 && _react2.default.createElement('input', { type: 'text', name: 'InfoPrice', className: '', onChange: this.productChanged }),
-                        this.props.workMode == 2 && _react2.default.createElement('input', { type: 'text', name: 'InfoPrice', className: '', onChange: this.productChanged, defaultValue: this.props.price }),
-                        this.props.workMode == 3 && this.props.price
+                        this.props.workMode == 1 && _react2.default.createElement('input', { type: 'text', name: 'InfoPrice', className: '', onChange: this.productChanged, onBlur: this.checkData }),
+                        this.props.workMode == 2 && _react2.default.createElement('input', { type: 'text', name: 'InfoPrice', className: '', onChange: this.productChanged, onBlur: this.checkData, value: this.state.price }),
+                        this.props.workMode == 3 && this.state.price,
+                        _react2.default.createElement(
+                            'span',
+                            { className: 'error' },
+                            this.state.errPrice
+                        )
                     ),
                     _react2.default.createElement('br', null),
                     _react2.default.createElement(
@@ -26917,12 +26931,17 @@ var ProductInfo = function (_React$Component) {
                         null,
                         _react2.default.createElement(
                             'span',
-                            null,
+                            { className: 'inputName' },
                             'Url: '
                         ),
-                        this.props.workMode == 1 && _react2.default.createElement('input', { type: 'text', name: 'InfoUrl', className: '', onChange: this.productChanged }),
-                        this.props.workMode == 2 && _react2.default.createElement('input', { type: 'text', name: 'InfoUrl', className: '', onChange: this.productChanged, defaultValue: this.props.url }),
-                        this.props.workMode == 3 && this.props.url
+                        this.props.workMode == 1 && _react2.default.createElement('input', { type: 'text', name: 'InfoUrl', className: '', onChange: this.productChanged, onBlur: this.checkData }),
+                        this.props.workMode == 2 && _react2.default.createElement('input', { type: 'text', name: 'InfoUrl', className: '', onChange: this.productChanged, onBlur: this.checkData, value: this.state.url }),
+                        this.props.workMode == 3 && this.state.url,
+                        _react2.default.createElement(
+                            'span',
+                            { className: 'error' },
+                            this.state.errUrl
+                        )
                     ),
                     _react2.default.createElement('br', null),
                     _react2.default.createElement(
@@ -26930,12 +26949,17 @@ var ProductInfo = function (_React$Component) {
                         null,
                         _react2.default.createElement(
                             'span',
-                            null,
+                            { className: 'inputName' },
                             'Quantity: '
                         ),
-                        this.props.workMode == 1 && _react2.default.createElement('input', { type: 'text', name: 'InfoQuantity', className: '', onChange: this.productChanged }),
-                        this.props.workMode == 2 && _react2.default.createElement('input', { type: 'text', name: 'InfoQuantity', className: '', onChange: this.productChanged, defaultValue: this.props.quantity }),
-                        this.props.workMode == 3 && this.props.quantity
+                        this.props.workMode == 1 && _react2.default.createElement('input', { type: 'text', name: 'InfoQuantity', className: '', onChange: this.productChanged, onBlur: this.checkData }),
+                        this.props.workMode == 2 && _react2.default.createElement('input', { type: 'text', name: 'InfoQuantity', className: '', onChange: this.productChanged, onBlur: this.checkData, value: this.state.quantity }),
+                        this.props.workMode == 3 && this.state.quantity,
+                        _react2.default.createElement(
+                            'span',
+                            { className: 'error' },
+                            this.state.errQuantity
+                        )
                     ),
                     _react2.default.createElement('br', null),
                     this.props.workMode == 1 && _react2.default.createElement('input', { type: 'button', value: 'Add', onClick: this.save, disabled: this.state.saveBlocked }),
@@ -26950,17 +26974,12 @@ var ProductInfo = function (_React$Component) {
 }(_react2.default.Component);
 
 ProductInfo.propTypes = {
+    product: _propTypes2.default.object.isRequired,
     workMode: _propTypes2.default.number.isRequired, //1 - add product, 2 - edit product, 3 - select product
     headerName: _propTypes2.default.string.isRequired,
-    id: _propTypes2.default.number,
-    name: _propTypes2.default.string,
-    price: _propTypes2.default.number,
-    url: _propTypes2.default.string,
-    quantity: _propTypes2.default.number,
     cbDataSave: _propTypes2.default.func.isRequired,
     cbDataCancel: _propTypes2.default.func.isRequired,
-    cbBlockTable: _propTypes2.default.func.isRequired,
-    product: _propTypes2.default.object
+    cbBlockTable: _propTypes2.default.func.isRequired
 };
 exports.default = ProductInfo;
 
@@ -26968,7 +26987,13 @@ exports.default = ProductInfo;
 /* 32 */
 /***/ (function(module, exports) {
 
-module.exports = [{"id":1,"name":"pen","price":10,"url":"url_1","quantity":5},{"id":2,"name":"pencil","price":2,"url":"url_2","quantity":6}]
+// removed by extract-text-webpack-plugin
+
+/***/ }),
+/* 33 */
+/***/ (function(module, exports) {
+
+module.exports = [{"id":1,"name":"pen1","price":1,"url":"url_1","quantity":7},{"id":2,"name":"pencil2","price":2,"url":"url_2","quantity":8},{"id":3,"name":"book3","price":3,"url":"url_3","quantity":9},{"id":4,"name":"pencil4","price":4,"url":"url_4","quantity":10},{"id":5,"name":"book5","price":5,"url":"url_5","quantity":11},{"id":6,"name":"notebook6","price":6,"url":"url_6","quantity":12}]
 
 /***/ })
 /******/ ]);

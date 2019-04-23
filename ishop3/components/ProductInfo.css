@@ -1,3 +1,7 @@
-label.ProductInfo span {
+.ProductInfo .InputName {
     width: 110px;
+    }
+
+.ProductInfo .error {
+    color: red;
     }

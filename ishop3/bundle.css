@@ -12,4 +12,12 @@
 .ShoppingList .selected {
     background-color: cadetblue;
     }
+.ProductInfo .InputName {
+    width: 110px;
+    }
+
+.ProductInfo .error {
+    color: red;
+    }
+
 /*# sourceMappingURL=bundle.css.map*/

@@ -3,6 +3,7 @@ import PropTypes from 'prop-types';
 
 import './ShoppingList.css';
 
+
 import ShoppingProduct from './ShoppingProduct';
 import ProductInfo from './ProductInfo';
 
@@ -13,59 +14,48 @@ class ShoppingList extends React.Component {
         originGoodsList: PropTypes.array.isRequired,
         headerName:      PropTypes.object,
     };
-    
-    state = {
-        actualSelectedId: 0,
-        actualGoodsList: this.props.originGoodsList,
-        actualProduct: {},
-        headerName: "",
-        workMode: 0,
-        isTableBlocked: false,   //any product is modified
-    }
 
+    constructor(props) {
+        super(props);
+        this.state = {  actualGoodsList: this.props.originGoodsList,
+                        actualSelectedId: 0,
+                        actualProduct: {},
+                        headerName: "",
+                        workMode: 0,  //1 - add product, 2 - edit product, 3 - select product
+                        isTableBlocked: false,
+                        LastId: this.props.originGoodsList.length,
+                    };
+       }
+   
     addProductForm = (  ) => {
-        if (this.state.isTableBlocked) {
-            return;
-        }
         console.log('Добавление продукта ');
-
-        this.setState( {headerName: ""} );
-        this.setState( {headerName: this.props.headerName.add} );
-        this.setState( {buttonName: "Add"} );
-        this.setState( {actualSelectedId: 0} );
-        this.setState( {workMode: 1} );
+       
+        this.setState({ 
+            headerName: this.props.headerName.add,
+            buttonName: "Add",
+            actualSelectedId: 0,
+            workMode: 1,
+        });
     }
 
     editProductForm = ( productId ) => {  
         console.log('Изменение продукта - ' + productId); 
 
-        let tempGoodsList = this.state.actualGoodsList.slice(); // make a copy
-
-        tempGoodsList.forEach((product, index, arr) => {
-            if ( product.id == productId ) {
-                this.setState( (prevState, props) => { return {headerName: this.props.headerName.edit}; } ); 
-                this.setState( (prevState, props) => { return {buttonName: "Save"}; } ); 
-                this.setState( (prevState, props) => { return {actualProduct: product}; } ); 
-                this.setState( (prevState, props) => { return {actualSelectedId: productId}; } ); 
-                this.setState( (prevState, props) => { return {workMode: 2}; } );
-                return;
-            };
+        this.setState({ 
+            actualSelectedId: productId,
+            workMode: 2,
+            headerName: this.props.headerName.edit,
+            buttonName: "Save",
         });
     }
 
-    selectProductForm = ( productId ) => {  
-        console.log('Выбор продукта - ' + productId);
+    selectProductForm = ( selectedId ) => {  
+        console.log('Выбран продукт - ' + selectedId);
 
-        let tempGoodsList = this.state.actualGoodsList.slice(); // make a copy
-
-        tempGoodsList.forEach((product, index, arr) => {
-            if ( product.id == productId ) {
-                this.setState( {headerName: product.name} );
-                this.setState( {actualProduct: product} );
-                this.setState( {actualSelectedId: productId} );
-                this.setState( {workMode: 3} );
-                return;
-            };
+        this.setState({ 
+            actualSelectedId: selectedId,
+            workMode: 3,
+            headerName: "",
         });
     }
 
@@ -73,36 +63,48 @@ class ShoppingList extends React.Component {
         console.log('Продукт удален - ' + productId); 
         
         //change actual product list
-        let tempGoodsList = this.state.actualGoodsList.slice(); // make a copy
-
-        tempGoodsList.filter((product, index, arr) => {
-            product.id != productId;
+        var tempGoodsList = [];
+        this.state.actualGoodsList.forEach((elem, index, arr) => {
+            if ( elem.id != productId ) {
+                tempGoodsList.push(elem);
+            };
         });
 
         this.setState( {actualGoodsList: tempGoodsList} );
         this.setState( {workMode: 0} );
     }
 
-    productSaved = ( NewProductData ) => {
+    productSaved = ( NewProduct ) => {
 
         let tempGoodsList = this.state.actualGoodsList.slice(); // make a copy
 
         if (this.state.workMode == 1) {         //Add
-            console.log('Продукт добавлен - ' + NewProductData.id); 
-            tempGoodsList.push(NewProductData);
+            console.log('Продукт добавлен - ' + NewProduct.id); 
+            tempGoodsList.push(NewProduct);
+            this.setState({ 
+                actualGoodsList: tempGoodsList,
+                actualSelectedId: NewProduct.id,
+                workMode: 0,
+                LastId: NewProduct.id,
+            });       
+            return;     
         }
         else if(this.state.workMode == 2) {     //Edit
-            console.log('Продукт изменен - ' + NewProductData.id); 
-            tempGoodsList.forEach((product, index, arr) => {
-                if ( product.id == NewProductData.id ) {
-                    tempGoodsList[index] = NewProductData;
-                }
+            console.log('Продукт изменен - ' + NewProduct.id);
 
+            tempGoodsList = tempGoodsList.map( product  => {
+                if (product.id != NewProduct.id)
+                    return product;
+                else
+                    return NewProduct;
             });
+            this.setState({ 
+                actualGoodsList: tempGoodsList,
+                actualSelectedId: NewProduct.id,
+                workMode: 0,
+            });               
         }
-        this.setState( {actualSelectedId: NewProductData.id} );
-        this.setState( {workMode: 0} );
-        this.setState( {actualGoodsList: tempGoodsList} );
+
     }
 
     productCanceled = ( v ) => {     
@@ -131,7 +133,17 @@ class ShoppingList extends React.Component {
                 cbEdit={this.editProductForm}
             />
         );
-
+        //get actual product
+        let product;
+        if(this.state.workMode!==1) {    //Edit, Select
+            product = this.state.actualGoodsList.find( product => { 
+                return (product.id == this.state.actualSelectedId);
+            });
+        }
+        else {  //Add
+            product = {id: this.state.LastId + 1, name: '', price: '', url: '', quantity: ''}; 
+        }
+        
         return (
             <div>
                 <div className='ShoppingList'>
@@ -140,22 +152,19 @@ class ShoppingList extends React.Component {
                         <thead><tr><th>Name</th><th>Price</th><th>Foto</th><th>Quantity</th><th>Control</th></tr></thead>
                         <tbody>{goods}</tbody>
                     </table>
-                    <input className='AddButton' type='button' value='Add' onClick={this.addProductForm} disabled={this.state.isTableBlocked}/>
+                    <input className='AddButton' type='button' value='New product' onClick={this.addProductForm} disabled={this.state.isTableBlocked}/>
                 </div>
                 <br/>
-                <ProductInfo
-                workMode={this.state.workMode}
-                id={this.state.workMode == 1 ? this.state.actualGoodsList.length + 1 : this.state.actualProduct.id}
-                name={this.state.actualProduct.name} 
-                price={this.state.actualProduct.price}
-                url={this.state.actualProduct.url}
-                quantity={this.state.actualProduct.quantity}
-                headerName={this.state.headerName}    
-                cbDataSave={this.productSaved}
-                cbDataCancel={this.productCanceled}
-                cbBlockTable={this.tableBlocked}
-                product={this.state.actualProduct}
-                />
+                {this.state.workMode!=0 && 
+                    <ProductInfo
+                    product={product}
+                    workMode={this.state.workMode}
+                    headerName={this.state.headerName}
+                    cbDataSave={this.productSaved}
+                    cbDataCancel={this.productCanceled}
+                    cbBlockTable={this.tableBlocked}
+                    />
+                }
             </div>
         );
     }
