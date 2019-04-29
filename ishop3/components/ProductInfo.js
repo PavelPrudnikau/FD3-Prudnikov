@@ -28,8 +28,11 @@ class ProductInfo extends React.Component {
     }
 
     componentDidUpdate = (oldProps, oldState) => { 
-        console.log('componentDidUpdate');     
-        if ( oldProps.product!==this.props.product && this.state.saveBlocked) {
+        console.log('componentDidUpdate');   
+        if (oldState.name != this.state.name || oldState.price != this.state.price || oldState.url != this.state.url || oldState.quantity != this.state.quantity) 
+            this.validData();
+                  
+        if ( oldProps.product.id!==this.props.product.id) {
             this.setState({        // сработает при обновлении компонента
                 name:       this.props.product.name,
                 price:      this.props.product.price,
@@ -44,7 +47,6 @@ class ProductInfo extends React.Component {
         let tempProduct = {
             ...this.state.product, name: this.state.name, price: parseInt(this.state.price), url: this.state.url, quantity: parseInt(this.state.quantity)
         };
-        this.validData();
         
         if(!this.validData())
         {
@@ -58,8 +60,10 @@ class ProductInfo extends React.Component {
         this.props.cbBlockTable(false);
     }
 
-    validData = (EO) => {
-        
+    validData = () => {
+        if(this.props.workMode==3)
+            return;
+                
         var isError = false;
 
             if(typeof this.state.name != "string" || this.state.name == "")
@@ -95,7 +99,6 @@ class ProductInfo extends React.Component {
                 this.setState( {errQuantity: ""} );
         
         this.setState( {saveBlocked: isError} );
-        //this.setState( (prevState, props) => { return {saveBlocked:isError}; } );
         
         return isError;
     }
@@ -114,7 +117,8 @@ class ProductInfo extends React.Component {
         else if (EO.target.name == "InfoQuantity") {
             this.setState( {quantity: EO.target.value} );
         }
-        this.setState( {saveBlocked: false} );
+
+        this.validData();        
         this.props.cbBlockTable(true);
     }
     

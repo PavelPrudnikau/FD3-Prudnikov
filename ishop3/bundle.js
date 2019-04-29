@@ -26789,13 +26789,15 @@ var ProductInfo = function (_React$Component) {
             url: _this.props.product.url,
             quantity: _this.props.product.quantity,
             product: _this.props.product,
-            saveBlocked: true,
+            saveBlocked: false,
             errName: "",
             errPrice: "",
             errUrl: "",
             errQuantity: ""
         }, _this.componentDidUpdate = function (oldProps, oldState) {
-            console.log('componentDidUpdate');
+            console.log('componentDidUpdate ' + _this.state.url + " " + _this.state.saveBlocked);
+            if (oldState.name != _this.state.name || oldState.price != _this.state.price || oldState.url != _this.state.url || oldState.quantity != _this.state.quantity) _this.validData();
+
             if (oldProps.product !== _this.props.product && _this.state.saveBlocked) {
                 _this.setState({ // сработает при обновлении компонента
                     name: _this.props.product.name,
@@ -26805,58 +26807,69 @@ var ProductInfo = function (_React$Component) {
                     product: _this.props.product
                 });
             }
+        }, _this.componentWillReceiveProps = function (newProps) {
+            console.log('componentWillReceiveProps ' + _this.state.url + " " + _this.state.saveBlocked);
+        }, _this.componentWillUpdate = function () {
+            console.log('componentWillUpdate ' + _this.state.url + " " + _this.state.saveBlocked);
+        }, _this.componentWillMount = function () {
+            console.log('componentWillMount ' + _this.state.url + " " + _this.state.saveBlocked);
+        }, _this.componentDidMount = function () {
+            console.log('componentDidMount ' + _this.state.url + " " + _this.state.saveBlocked);
+        }, _this.componentWillUnmount = function () {
+            console.log('componentWillUnmount ' + _this.state.url + " " + _this.state.saveBlocked);
         }, _this.save = function () {
             var tempProduct = _extends({}, _this.state.product, { name: _this.state.name, price: parseInt(_this.state.price), url: _this.state.url, quantity: parseInt(_this.state.quantity)
             });
-            _this.checkData();
 
-            if (!_this.state.saveBlocked) {
+            if (!_this.validData()) {
                 _this.props.cbDataSave(tempProduct);
                 _this.props.cbBlockTable(false);
             }
         }, _this.cancel = function () {
             _this.props.cbDataCancel();
             _this.props.cbBlockTable(false);
-        }, _this.checkData = function (EO) {
+        }, _this.validData = function () {
 
             var isError = false;
-            //if (EO.target.name == "InfoName") {
+
             if (typeof _this.state.name != "string" || _this.state.name == "") {
                 _this.setState({ errName: "Value must be a string" });
                 isError = true;
             } else _this.setState({ errName: "" });
-            //}
-            // else if (EO.target.name == "InfoPrice") {
+
             if (isNaN(_this.state.price) || _this.state.price < 0 || _this.state.price == "") {
                 _this.setState({ errPrice: "Value must be a number greater than 0" });
                 isError = true;
             } else _this.setState({ errPrice: "" });
-            //}
-            // else if (EO.target.name == "InfoUrl") {
+
             if (_this.state.url.indexOf('http://') < 0 || _this.state.url == "") {
                 _this.setState({ errUrl: "Value shoud have 'http://' " });
                 isError = true;
             } else _this.setState({ errUrl: "" });
-            // }
-            //else if (EO.target.name == "InfoQuantity") {
+
             if (isNaN(_this.state.quantity) || _this.state.quantity < 0 || _this.state.quantity == "") {
                 _this.setState({ errQuantity: "Value must be a positive integer" });
                 isError = true;
             } else _this.setState({ errQuantity: "" });
-            //}
-            _this.setState({ saveBlocked: isError });
-        }, _this.productChanged = function (EO) {
 
+            _this.setState({ saveBlocked: isError });
+
+            return isError;
+        }, _this.productChanged = function (EO) {
+            //var value = EO.target.value;
             if (EO.target.name == "InfoName") {
                 _this.setState({ name: EO.target.value });
             } else if (EO.target.name == "InfoPrice") {
                 _this.setState({ price: EO.target.value });
             } else if (EO.target.name == "InfoUrl") {
                 _this.setState({ url: EO.target.value });
+                //this.setState( (prevState, props) => { return {url:value}; } );
             } else if (EO.target.name == "InfoQuantity") {
                 _this.setState({ quantity: EO.target.value });
             }
-            _this.setState({ saveBlocked: false });
+
+            _this.validData();
+            //this.setState( {saveBlocked: false} );
             _this.props.cbBlockTable(true);
         }, _temp), _possibleConstructorReturn(_this, _ret);
     }
@@ -26898,8 +26911,8 @@ var ProductInfo = function (_React$Component) {
                             { className: 'inputName' },
                             'Name: '
                         ),
-                        this.props.workMode == 1 && _react2.default.createElement('input', { type: 'text', name: 'InfoName', className: '', onChange: this.productChanged, onBlur: this.checkData }),
-                        this.props.workMode == 2 && _react2.default.createElement('input', { type: 'text', name: 'InfoName', className: '', onChange: this.productChanged, onBlur: this.checkData, value: this.state.name }),
+                        this.props.workMode == 1 && _react2.default.createElement('input', { type: 'text', name: 'InfoName', className: '', onChange: this.productChanged, onBlur: this.validData }),
+                        this.props.workMode == 2 && _react2.default.createElement('input', { type: 'text', name: 'InfoName', className: '', onChange: this.productChanged, onBlur: this.validData, value: this.state.name }),
                         this.props.workMode == 3 && this.state.name,
                         _react2.default.createElement(
                             'span',
@@ -26916,8 +26929,8 @@ var ProductInfo = function (_React$Component) {
                             { className: 'inputName' },
                             'Price: '
                         ),
-                        this.props.workMode == 1 && _react2.default.createElement('input', { type: 'text', name: 'InfoPrice', className: '', onChange: this.productChanged, onBlur: this.checkData }),
-                        this.props.workMode == 2 && _react2.default.createElement('input', { type: 'text', name: 'InfoPrice', className: '', onChange: this.productChanged, onBlur: this.checkData, value: this.state.price }),
+                        this.props.workMode == 1 && _react2.default.createElement('input', { type: 'text', name: 'InfoPrice', className: '', onChange: this.productChanged, onBlur: this.validData }),
+                        this.props.workMode == 2 && _react2.default.createElement('input', { type: 'text', name: 'InfoPrice', className: '', onChange: this.productChanged, onBlur: this.validData, value: this.state.price }),
                         this.props.workMode == 3 && this.state.price,
                         _react2.default.createElement(
                             'span',
@@ -26934,8 +26947,8 @@ var ProductInfo = function (_React$Component) {
                             { className: 'inputName' },
                             'Url: '
                         ),
-                        this.props.workMode == 1 && _react2.default.createElement('input', { type: 'text', name: 'InfoUrl', className: '', onChange: this.productChanged, onBlur: this.checkData }),
-                        this.props.workMode == 2 && _react2.default.createElement('input', { type: 'text', name: 'InfoUrl', className: '', onChange: this.productChanged, onBlur: this.checkData, value: this.state.url }),
+                        this.props.workMode == 1 && _react2.default.createElement('input', { type: 'text', name: 'InfoUrl', className: '', onChange: this.productChanged, onBlur: this.validData }),
+                        this.props.workMode == 2 && _react2.default.createElement('input', { type: 'text', name: 'InfoUrl', className: '', onChange: this.productChanged, onBlur: this.validData, value: this.state.url }),
                         this.props.workMode == 3 && this.state.url,
                         _react2.default.createElement(
                             'span',
@@ -26952,8 +26965,8 @@ var ProductInfo = function (_React$Component) {
                             { className: 'inputName' },
                             'Quantity: '
                         ),
-                        this.props.workMode == 1 && _react2.default.createElement('input', { type: 'text', name: 'InfoQuantity', className: '', onChange: this.productChanged, onBlur: this.checkData }),
-                        this.props.workMode == 2 && _react2.default.createElement('input', { type: 'text', name: 'InfoQuantity', className: '', onChange: this.productChanged, onBlur: this.checkData, value: this.state.quantity }),
+                        this.props.workMode == 1 && _react2.default.createElement('input', { type: 'text', name: 'InfoQuantity', className: '', onChange: this.productChanged, onBlur: this.validData }),
+                        this.props.workMode == 2 && _react2.default.createElement('input', { type: 'text', name: 'InfoQuantity', className: '', onChange: this.productChanged, onBlur: this.validData, value: this.state.quantity }),
                         this.props.workMode == 3 && this.state.quantity,
                         _react2.default.createElement(
                             'span',
