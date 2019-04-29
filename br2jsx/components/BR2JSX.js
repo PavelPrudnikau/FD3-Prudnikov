@@ -16,7 +16,8 @@ class BR2JSX extends React.Component {
     var arRender=[];
     arText.forEach((elem,index) => {
       arRender.push(elem);
-      arRender.push(<br key={index}/> );
+      if(index != (arText.length - 1))
+        arRender.push(<br key={index}/> );
     });
 
     return <div className="br2jsx">{arRender}</div>

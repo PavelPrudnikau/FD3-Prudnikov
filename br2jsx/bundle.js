@@ -25663,33 +25663,28 @@ var BR2JSX = function (_React$Component) {
   _inherits(BR2JSX, _React$Component);
 
   function BR2JSX() {
-    var _ref;
-
-    var _temp, _this, _ret;
-
     _classCallCheck(this, BR2JSX);
 
-    for (var _len = arguments.length, args = Array(_len), _key = 0; _key < _len; _key++) {
-      args[_key] = arguments[_key];
-    }
-
-    return _ret = (_temp = (_this = _possibleConstructorReturn(this, (_ref = BR2JSX.__proto__ || Object.getPrototypeOf(BR2JSX)).call.apply(_ref, [this].concat(args))), _this), _this.paintFrame = function (color, child) {
-      return _react2.default.createElement(
-        'div',
-        { style: { border: "solid 5px " + color, padding: "10px" } },
-        child
-      );
-    }, _temp), _possibleConstructorReturn(_this, _ret);
+    return _possibleConstructorReturn(this, (BR2JSX.__proto__ || Object.getPrototypeOf(BR2JSX)).apply(this, arguments));
   }
 
   _createClass(BR2JSX, [{
     key: 'render',
     value: function render() {
 
-      var arText = this.props.text.split(/<br/);
-      //this.props.colors.forEach((color) => actualFrames = this.paintFrame(color, actualFrames) );
+      var arText = this.props.text.split(/<br\s?\/?>/);
 
-      return arText;
+      var arRender = [];
+      arText.forEach(function (elem, index) {
+        arRender.push(elem);
+        arRender.push(_react2.default.createElement('br', { key: index }));
+      });
+
+      return _react2.default.createElement(
+        'div',
+        { className: 'br2jsx' },
+        arRender
+      );
     }
   }]);
 
@@ -25697,7 +25692,7 @@ var BR2JSX = function (_React$Component) {
 }(_react2.default.Component);
 
 BR2JSX.propTypes = {
-  text: _propTypes2.default.text.isRequired
+  text: _propTypes2.default.string.isRequired
 };
 exports.default = BR2JSX;
 
