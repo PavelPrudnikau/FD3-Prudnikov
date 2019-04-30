@@ -28,10 +28,8 @@ class ProductInfo extends React.Component {
     }
 
     componentDidUpdate = (oldProps, oldState) => { 
-        console.log('componentDidUpdate');   
-        if (oldState.name != this.state.name || oldState.price != this.state.price || oldState.url != this.state.url || oldState.quantity != this.state.quantity) 
-            this.validData();
-                  
+        this.validData();
+        
         if ( oldProps.product.id!==this.props.product.id) {
             this.setState({        // сработает при обновлении компонента
                 name:       this.props.product.name,
@@ -42,7 +40,11 @@ class ProductInfo extends React.Component {
             });
         }
     };
-   
+
+    componentDidMount = () => {
+        this.validData();
+    };
+
     save = () => { 
         let tempProduct = {
             ...this.state.product, name: this.state.name, price: parseInt(this.state.price), url: this.state.url, quantity: parseInt(this.state.quantity)
@@ -61,44 +63,54 @@ class ProductInfo extends React.Component {
     }
 
     validData = () => {
-        if(this.props.workMode==3)
-            return;
-                
-        var isError = false;
 
-            if(typeof this.state.name != "string" || this.state.name == "")
-            {
-                this.setState( {errName: "Value must be a string"} );
-                isError = true;
-            }
-            else 
-                this.setState( {errName: ""} );
-            
-            if(isNaN(this.state.price) || this.state.price < 0 || this.state.price == "")
-            {
-                this.setState( {errPrice: "Value must be a number greater than 0"} );
-                isError = true;
-            }
-            else
-                this.setState( {errPrice: ""} );
-            
-            if(this.state.url.indexOf('http://') < 0 || this.state.url == "")
-            {
-                this.setState( {errUrl: "Value shoud have 'http://' "} );
-                isError = true;
-            }
-            else 
-                this.setState( {errUrl: ""} );
-            
-            if(isNaN(this.state.quantity) || this.state.quantity < 0 || this.state.quantity == "")
-            {
-                this.setState( {errQuantity: "Value must be a positive integer"} );
-                isError = true;
-            }
-            else 
-                this.setState( {errQuantity: ""} );
+        var isError = false;
+            //name
+        var textNameError = "";
+        if( this.props.workMode != 3 && (typeof this.state.name != "string" || this.state.name == "") )
+        {
+            textNameError = "Value must be a string";
+            isError = true;
+        }
         
-        this.setState( {saveBlocked: isError} );
+        if(textNameError != this.state.errName)
+            this.setState( {errName: textNameError} );
+
+        //price
+        var textPriceError = "";
+        if( this.props.workMode != 3 && (isNaN(this.state.price) || this.state.price < 0 || this.state.price == "") )
+        {
+            textPriceError = "Value must be a number greater than 0";
+            isError = true;
+        }
+        
+        if(textPriceError != this.state.errPrice)
+            this.setState( {errPrice: textPriceError} );
+
+        //url
+        var textUrlError = "";
+        if( this.props.workMode != 3 && (this.state.url.indexOf('http://') < 0 || this.state.url == "") )
+        {
+            textUrlError = "Value shoud have 'http://' ";
+            isError = true;
+        }
+        
+        if(textUrlError != this.state.errUrl)
+            this.setState( {errUrl: textUrlError} );
+        
+        //quantity
+        var textQuantityError = "";
+        if( this.props.workMode != 3 && (isNaN(this.state.quantity) || this.state.quantity < 0 || this.state.quantity == "") )
+        {
+            textQuantityError = "Value must be a positive integer";
+            isError = true;
+        }
+        
+        if(textQuantityError != this.state.errQuantity)
+            this.setState( {errQuantity: textQuantityError} );
+            
+        if(isError != this.state.saveBlocked)
+            this.setState( {saveBlocked: isError} );
         
         return isError;
     }
@@ -117,63 +129,59 @@ class ProductInfo extends React.Component {
         else if (EO.target.name == "InfoQuantity") {
             this.setState( {quantity: EO.target.value} );
         }
-
-        this.validData();        
+        
         this.props.cbBlockTable(true);
     }
     
     render() {
 
-        if (this.props.workMode==0) {
+        if (this.props.workMode==0)
             return null;
-        }
-        else {
-            return (
-                <div className='ProductInfo' key={this.props.product.id}>
-                    <h1> {this.props.headerName ? this.props.headerName : this.props.product.name} </h1>
-                    <label>
-                        <span>ID: {this.props.product.id} </span>
-                    </label>
-                    <br/>
-                    <label>
-                        <span className='inputName'>Name: </span>
-                        {this.props.workMode==1 && <input type='text' name='InfoName' className='' onChange={this.productChanged} onBlur={this.validData}/>}
-                        {this.props.workMode==2 && <input type='text' name='InfoName' className='' onChange={this.productChanged} onBlur={this.validData} value={this.state.name}/>}
-                        {this.props.workMode==3 && this.state.name }
-                        <span className='error'>{this.state.errName}</span>
-                    </label>
-                    <br/>
-                    <label>
-                        <span className='inputName'>Price: </span>
-                        {this.props.workMode==1 && <input type='text' name='InfoPrice' className='' onChange={this.productChanged} onBlur={this.validData}/>}
-                        {this.props.workMode==2 && <input type='text' name='InfoPrice' className='' onChange={this.productChanged} onBlur={this.validData} value={this.state.price}/>}
-                        {this.props.workMode==3 && this.state.price }
-                        <span className='error'>{this.state.errPrice}</span>
-                    </label>
-                    <br/>
-                    <label>
-                        <span className='inputName'>Url: </span>
-                        {this.props.workMode==1 && <input type='text' name='InfoUrl' className='' onChange={this.productChanged} onBlur={this.validData}/>}
-                        {this.props.workMode==2 && <input type='text' name='InfoUrl' className='' onChange={this.productChanged} onBlur={this.validData} value={this.state.url}/>}
-                        {this.props.workMode==3 && this.state.url }
-                        <span className='error'>{this.state.errUrl}</span>
-                    </label>
-                    <br/>
-                    <label>
-                        <span className='inputName'>Quantity: </span>
-                        {this.props.workMode==1 && <input type='text' name='InfoQuantity' className='' onChange={this.productChanged} onBlur={this.validData}/>}
-                        {this.props.workMode==2 && <input type='text' name='InfoQuantity' className='' onChange={this.productChanged} onBlur={this.validData} value={this.state.quantity}/>}
-                        {this.props.workMode==3 && this.state.quantity }
-                        <span className='error'>{this.state.errQuantity}</span>
-                    </label>
-                    <br/>
-                    {this.props.workMode==1 && <input type='button' value="Add"  onClick={this.save} disabled={this.state.saveBlocked}/>}
-                    {this.props.workMode==2 && <input type='button' value="Save" onClick={this.save} disabled={this.state.saveBlocked}/>}
-                    {this.props.workMode!=3 && <input type='button' value="Cancel" onClick={this.cancel} />}
-                </div>
-            )
-        }
-
+        
+        return (
+            <div className='ProductInfo' key={this.props.product.id}>
+                <h1> {this.props.headerName ? this.props.headerName : this.props.product.name} </h1>
+                <label>
+                    <span>ID: {this.props.product.id} </span>
+                </label>
+                <br/>
+                <label>
+                    <span className='inputName'>Name: </span>
+                    {this.props.workMode==1 && <input type='text' name='InfoName' className='' onChange={this.productChanged} onBlur={this.validData}/>}
+                    {this.props.workMode==2 && <input type='text' name='InfoName' className='' onChange={this.productChanged} onBlur={this.validData} value={this.state.name}/>}
+                    {this.props.workMode==3 && this.state.name }
+                    <span className='error'>{this.state.errName}</span>
+                </label>
+                <br/>
+                <label>
+                    <span className='inputName'>Price: </span>
+                    {this.props.workMode==1 && <input type='text' name='InfoPrice' className='' onChange={this.productChanged} onBlur={this.validData}/>}
+                    {this.props.workMode==2 && <input type='text' name='InfoPrice' className='' onChange={this.productChanged} onBlur={this.validData} value={this.state.price}/>}
+                    {this.props.workMode==3 && this.state.price }
+                    <span className='error'>{this.state.errPrice}</span>
+                </label>
+                <br/>
+                <label>
+                    <span className='inputName'>Url: </span>
+                    {this.props.workMode==1 && <input type='text' name='InfoUrl' className='' onChange={this.productChanged} onBlur={this.validData}/>}
+                    {this.props.workMode==2 && <input type='text' name='InfoUrl' className='' onChange={this.productChanged} onBlur={this.validData} value={this.state.url}/>}
+                    {this.props.workMode==3 && this.state.url }
+                    <span className='error'>{this.state.errUrl}</span>
+                </label>
+                <br/>
+                <label>
+                    <span className='inputName'>Quantity: </span>
+                    {this.props.workMode==1 && <input type='text' name='InfoQuantity' className='' onChange={this.productChanged} onBlur={this.validData}/>}
+                    {this.props.workMode==2 && <input type='text' name='InfoQuantity' className='' onChange={this.productChanged} onBlur={this.validData} value={this.state.quantity}/>}
+                    {this.props.workMode==3 && this.state.quantity }
+                    <span className='error'>{this.state.errQuantity}</span>
+                </label>
+                <br/>
+                {this.props.workMode==1 && <input type='button' value="Add"  onClick={this.save} disabled={this.state.saveBlocked}/>}
+                {this.props.workMode==2 && <input type='button' value="Save" onClick={this.save} disabled={this.state.saveBlocked}/>}
+                {this.props.workMode!=3 && <input type='button' value="Cancel" onClick={this.cancel} />}
+            </div>
+        )
     }
 }
 

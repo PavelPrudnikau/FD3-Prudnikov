@@ -112,7 +112,6 @@ class ShoppingList extends React.Component {
     }
 
     tableBlocked = ( v ) => {
-        console.log('Блокировка таблицы ' + v); 
         this.setState( {isTableBlocked: v} );
     }
 

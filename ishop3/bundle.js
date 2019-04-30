@@ -26795,10 +26795,10 @@ var ProductInfo = function (_React$Component) {
             errUrl: "",
             errQuantity: ""
         }, _this.componentDidUpdate = function (oldProps, oldState) {
-            console.log('componentDidUpdate ' + _this.state.url + " " + _this.state.saveBlocked);
+            console.log('componentDidUpdate');
             if (oldState.name != _this.state.name || oldState.price != _this.state.price || oldState.url != _this.state.url || oldState.quantity != _this.state.quantity) _this.validData();
 
-            if (oldProps.product !== _this.props.product && _this.state.saveBlocked) {
+            if (oldProps.product.id !== _this.props.product.id) {
                 _this.setState({ // сработает при обновлении компонента
                     name: _this.props.product.name,
                     price: _this.props.product.price,
@@ -26807,16 +26807,6 @@ var ProductInfo = function (_React$Component) {
                     product: _this.props.product
                 });
             }
-        }, _this.componentWillReceiveProps = function (newProps) {
-            console.log('componentWillReceiveProps ' + _this.state.url + " " + _this.state.saveBlocked);
-        }, _this.componentWillUpdate = function () {
-            console.log('componentWillUpdate ' + _this.state.url + " " + _this.state.saveBlocked);
-        }, _this.componentWillMount = function () {
-            console.log('componentWillMount ' + _this.state.url + " " + _this.state.saveBlocked);
-        }, _this.componentDidMount = function () {
-            console.log('componentDidMount ' + _this.state.url + " " + _this.state.saveBlocked);
-        }, _this.componentWillUnmount = function () {
-            console.log('componentWillUnmount ' + _this.state.url + " " + _this.state.saveBlocked);
         }, _this.save = function () {
             var tempProduct = _extends({}, _this.state.product, { name: _this.state.name, price: parseInt(_this.state.price), url: _this.state.url, quantity: parseInt(_this.state.quantity)
             });
@@ -26829,157 +26819,188 @@ var ProductInfo = function (_React$Component) {
             _this.props.cbDataCancel();
             _this.props.cbBlockTable(false);
         }, _this.validData = function () {
+            if (_this.props.workMode == 3) return;
 
             var isError = false;
-
+            //name
+            var textNameError = "";
             if (typeof _this.state.name != "string" || _this.state.name == "") {
-                _this.setState({ errName: "Value must be a string" });
+                textNameError = "Value must be a string";
                 isError = true;
-            } else _this.setState({ errName: "" });
+            }
 
+            if (textNameError != _this.state.errName) _this.setState({ errName: textNameError });
+
+            //price
+            var textPriceError = "";
             if (isNaN(_this.state.price) || _this.state.price < 0 || _this.state.price == "") {
-                _this.setState({ errPrice: "Value must be a number greater than 0" });
+                textPriceError = "Value must be a number greater than 0";
                 isError = true;
-            } else _this.setState({ errPrice: "" });
+            }
 
+            if (textPriceError != _this.state.errPrice) _this.setState({ errPrice: textPriceError });
+
+            //url
+            var textUrlError = "";
             if (_this.state.url.indexOf('http://') < 0 || _this.state.url == "") {
-                _this.setState({ errUrl: "Value shoud have 'http://' " });
+                textUrlError = "Value shoud have 'http://' ";
                 isError = true;
-            } else _this.setState({ errUrl: "" });
+            }
 
+            if (textUrlError != _this.state.errUrl) _this.setState({ errUrl: textUrlError });
+
+            //quantity
+            var textQuantityError = "";
             if (isNaN(_this.state.quantity) || _this.state.quantity < 0 || _this.state.quantity == "") {
-                _this.setState({ errQuantity: "Value must be a positive integer" });
+                textQuantityError = "Value must be a positive integer";
                 isError = true;
-            } else _this.setState({ errQuantity: "" });
+            }
 
-            _this.setState({ saveBlocked: isError });
+            if (textQuantityError != _this.state.errQuantity) _this.setState({ errQuantity: textQuantityError });
+
+            if (isError != _this.state.saveBlocked) _this.setState({ saveBlocked: isError });
 
             return isError;
         }, _this.productChanged = function (EO) {
-            //var value = EO.target.value;
+
             if (EO.target.name == "InfoName") {
                 _this.setState({ name: EO.target.value });
             } else if (EO.target.name == "InfoPrice") {
                 _this.setState({ price: EO.target.value });
             } else if (EO.target.name == "InfoUrl") {
                 _this.setState({ url: EO.target.value });
-                //this.setState( (prevState, props) => { return {url:value}; } );
             } else if (EO.target.name == "InfoQuantity") {
                 _this.setState({ quantity: EO.target.value });
             }
 
             _this.validData();
-            //this.setState( {saveBlocked: false} );
             _this.props.cbBlockTable(true);
         }, _temp), _possibleConstructorReturn(_this, _ret);
     }
+    /*
+        componentWillReceiveProps = (newProps)           => { console.log('componentWillReceiveProps'); };
+    
+        componentWillUpdate       = () => { 
+            console.log('componentWillUpdate');
+            if (oldState.name != this.state.name || oldState.price != this.state.price || oldState.url != this.state.url || oldState.quantity != this.state.quantity) 
+            this.validData();       
+        };
+    
+        componentWillMount       = () => { 
+            console.log('componentWillUpdate');
+            if (oldState.name != this.state.name || oldState.price != this.state.price || oldState.url != this.state.url || oldState.quantity != this.state.quantity) 
+            this.validData();       
+        };
+    
+        componentDidMount         = ()                   => { console.log('componentDidMount');         };
+        componentWillUnmount      = ()                   => { console.log('componentWillUnmount');      };    
+    */
+
 
     _createClass(ProductInfo, [{
         key: 'render',
         value: function render() {
 
-            if (this.props.workMode == 0) {
-                return null;
-            } else {
-                return _react2.default.createElement(
-                    'div',
-                    { className: 'ProductInfo', key: this.props.product.id },
+            if (this.props.workMode == 0) return null;
+
+            return _react2.default.createElement(
+                'div',
+                { className: 'ProductInfo', key: this.props.product.id },
+                _react2.default.createElement(
+                    'h1',
+                    null,
+                    ' ',
+                    this.props.headerName ? this.props.headerName : this.props.product.name,
+                    ' '
+                ),
+                _react2.default.createElement(
+                    'label',
+                    null,
                     _react2.default.createElement(
-                        'h1',
+                        'span',
                         null,
-                        ' ',
-                        this.props.headerName ? this.props.headerName : this.props.product.name,
+                        'ID: ',
+                        this.props.product.id,
                         ' '
-                    ),
+                    )
+                ),
+                _react2.default.createElement('br', null),
+                _react2.default.createElement(
+                    'label',
+                    null,
                     _react2.default.createElement(
-                        'label',
-                        null,
-                        _react2.default.createElement(
-                            'span',
-                            null,
-                            'ID: ',
-                            this.props.product.id,
-                            ' '
-                        )
+                        'span',
+                        { className: 'inputName' },
+                        'Name: '
                     ),
-                    _react2.default.createElement('br', null),
+                    this.props.workMode == 1 && _react2.default.createElement('input', { type: 'text', name: 'InfoName', className: '', onChange: this.productChanged, onBlur: this.validData }),
+                    this.props.workMode == 2 && _react2.default.createElement('input', { type: 'text', name: 'InfoName', className: '', onChange: this.productChanged, onBlur: this.validData, value: this.state.name }),
+                    this.props.workMode == 3 && this.state.name,
                     _react2.default.createElement(
-                        'label',
-                        null,
-                        _react2.default.createElement(
-                            'span',
-                            { className: 'inputName' },
-                            'Name: '
-                        ),
-                        this.props.workMode == 1 && _react2.default.createElement('input', { type: 'text', name: 'InfoName', className: '', onChange: this.productChanged, onBlur: this.validData }),
-                        this.props.workMode == 2 && _react2.default.createElement('input', { type: 'text', name: 'InfoName', className: '', onChange: this.productChanged, onBlur: this.validData, value: this.state.name }),
-                        this.props.workMode == 3 && this.state.name,
-                        _react2.default.createElement(
-                            'span',
-                            { className: 'error' },
-                            this.state.errName
-                        )
-                    ),
-                    _react2.default.createElement('br', null),
+                        'span',
+                        { className: 'error' },
+                        this.state.errName
+                    )
+                ),
+                _react2.default.createElement('br', null),
+                _react2.default.createElement(
+                    'label',
+                    null,
                     _react2.default.createElement(
-                        'label',
-                        null,
-                        _react2.default.createElement(
-                            'span',
-                            { className: 'inputName' },
-                            'Price: '
-                        ),
-                        this.props.workMode == 1 && _react2.default.createElement('input', { type: 'text', name: 'InfoPrice', className: '', onChange: this.productChanged, onBlur: this.validData }),
-                        this.props.workMode == 2 && _react2.default.createElement('input', { type: 'text', name: 'InfoPrice', className: '', onChange: this.productChanged, onBlur: this.validData, value: this.state.price }),
-                        this.props.workMode == 3 && this.state.price,
-                        _react2.default.createElement(
-                            'span',
-                            { className: 'error' },
-                            this.state.errPrice
-                        )
+                        'span',
+                        { className: 'inputName' },
+                        'Price: '
                     ),
-                    _react2.default.createElement('br', null),
+                    this.props.workMode == 1 && _react2.default.createElement('input', { type: 'text', name: 'InfoPrice', className: '', onChange: this.productChanged, onBlur: this.validData }),
+                    this.props.workMode == 2 && _react2.default.createElement('input', { type: 'text', name: 'InfoPrice', className: '', onChange: this.productChanged, onBlur: this.validData, value: this.state.price }),
+                    this.props.workMode == 3 && this.state.price,
                     _react2.default.createElement(
-                        'label',
-                        null,
-                        _react2.default.createElement(
-                            'span',
-                            { className: 'inputName' },
-                            'Url: '
-                        ),
-                        this.props.workMode == 1 && _react2.default.createElement('input', { type: 'text', name: 'InfoUrl', className: '', onChange: this.productChanged, onBlur: this.validData }),
-                        this.props.workMode == 2 && _react2.default.createElement('input', { type: 'text', name: 'InfoUrl', className: '', onChange: this.productChanged, onBlur: this.validData, value: this.state.url }),
-                        this.props.workMode == 3 && this.state.url,
-                        _react2.default.createElement(
-                            'span',
-                            { className: 'error' },
-                            this.state.errUrl
-                        )
-                    ),
-                    _react2.default.createElement('br', null),
+                        'span',
+                        { className: 'error' },
+                        this.state.errPrice
+                    )
+                ),
+                _react2.default.createElement('br', null),
+                _react2.default.createElement(
+                    'label',
+                    null,
                     _react2.default.createElement(
-                        'label',
-                        null,
-                        _react2.default.createElement(
-                            'span',
-                            { className: 'inputName' },
-                            'Quantity: '
-                        ),
-                        this.props.workMode == 1 && _react2.default.createElement('input', { type: 'text', name: 'InfoQuantity', className: '', onChange: this.productChanged, onBlur: this.validData }),
-                        this.props.workMode == 2 && _react2.default.createElement('input', { type: 'text', name: 'InfoQuantity', className: '', onChange: this.productChanged, onBlur: this.validData, value: this.state.quantity }),
-                        this.props.workMode == 3 && this.state.quantity,
-                        _react2.default.createElement(
-                            'span',
-                            { className: 'error' },
-                            this.state.errQuantity
-                        )
+                        'span',
+                        { className: 'inputName' },
+                        'Url: '
                     ),
-                    _react2.default.createElement('br', null),
-                    this.props.workMode == 1 && _react2.default.createElement('input', { type: 'button', value: 'Add', onClick: this.save, disabled: this.state.saveBlocked }),
-                    this.props.workMode == 2 && _react2.default.createElement('input', { type: 'button', value: 'Save', onClick: this.save, disabled: this.state.saveBlocked }),
-                    this.props.workMode != 3 && _react2.default.createElement('input', { type: 'button', value: 'Cancel', onClick: this.cancel })
-                );
-            }
+                    this.props.workMode == 1 && _react2.default.createElement('input', { type: 'text', name: 'InfoUrl', className: '', onChange: this.productChanged, onBlur: this.validData }),
+                    this.props.workMode == 2 && _react2.default.createElement('input', { type: 'text', name: 'InfoUrl', className: '', onChange: this.productChanged, onBlur: this.validData, value: this.state.url }),
+                    this.props.workMode == 3 && this.state.url,
+                    _react2.default.createElement(
+                        'span',
+                        { className: 'error' },
+                        this.state.errUrl
+                    )
+                ),
+                _react2.default.createElement('br', null),
+                _react2.default.createElement(
+                    'label',
+                    null,
+                    _react2.default.createElement(
+                        'span',
+                        { className: 'inputName' },
+                        'Quantity: '
+                    ),
+                    this.props.workMode == 1 && _react2.default.createElement('input', { type: 'text', name: 'InfoQuantity', className: '', onChange: this.productChanged, onBlur: this.validData }),
+                    this.props.workMode == 2 && _react2.default.createElement('input', { type: 'text', name: 'InfoQuantity', className: '', onChange: this.productChanged, onBlur: this.validData, value: this.state.quantity }),
+                    this.props.workMode == 3 && this.state.quantity,
+                    _react2.default.createElement(
+                        'span',
+                        { className: 'error' },
+                        this.state.errQuantity
+                    )
+                ),
+                _react2.default.createElement('br', null),
+                this.props.workMode == 1 && _react2.default.createElement('input', { type: 'button', value: 'Add', onClick: this.save, disabled: this.state.saveBlocked }),
+                this.props.workMode == 2 && _react2.default.createElement('input', { type: 'button', value: 'Save', onClick: this.save, disabled: this.state.saveBlocked }),
+                this.props.workMode != 3 && _react2.default.createElement('input', { type: 'button', value: 'Cancel', onClick: this.cancel })
+            );
         }
     }]);
 
