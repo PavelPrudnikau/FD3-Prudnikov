@@ -1,0 +1,21 @@
+﻿div.MobileClient
+{
+  padding: 2px 0;
+}
+
+tr.MobileClient
+{
+  border-bottom: 1px solid black;
+  border-top: 1px solid black;
+  border-collapse: collapse; 
+}
+
+.StatusActive
+{
+  background-color: greenyellow;
+}
+
+.StatusBlocked
+{
+  background-color: red;
+}

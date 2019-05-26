@@ -1,0 +1,45 @@
+﻿.MobileCompany
+{
+  padding: 20px;
+}
+
+.MobileCompanyName
+{
+  font-weight: bold;
+}
+
+.MobileCompanyClients
+{
+  padding-top: 5px;
+  border-collapse: collapse;
+}
+.MobileCompanyClients tr
+{
+  border-bottom: 1px solid black;
+  border-top: 1px solid black;
+}
+.MobileCompanyClients td
+{
+  width: 120px;
+  border-right: none; 
+  border-left: none;
+  padding:5px;
+}
+
+.MobileCompanyClients th
+{
+  text-align: left;
+  padding:5px;
+}
+
+.button {
+
+  padding: 7px 15px;
+  text-align: center;
+  font-size: 14px;
+}
+
+
+
+
+
