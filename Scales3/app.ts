@@ -1,3 +1,4 @@
+
 interface IScalable {
 
     getScale():void;
@@ -11,7 +12,7 @@ class Apple implements IScalable {
     scale: number;
 
     constructor(_scale:number) {
-        this.name = "apple";
+        this.name = "Apple";
         this.scale = _scale;
     }
 
@@ -30,7 +31,7 @@ class Tomat implements IScalable {
     scale: number;
 
     constructor(_scale:number) {
-        this.name = "tomat";
+        this.name = "Tomat";
         this.scale = _scale;
     }
 
@@ -52,15 +53,13 @@ class Scales {
     
     getSumScale():number {
         var sum:number = 0;
+        /*for(let i=0;i<this.products.length;i++)
+        { 
+           sum += this.products[i].getScale();
+        }*/
         this.products.forEach( prod => {sum += prod.getScale()} );
         return sum;
     }
-
-    getNameList():Array<string> {
-        var names:Array<string> = [];
-        this.products.forEach( prod => {names.push( prod.getName() )} );
-        return names;
-    }    
 }
 
 
@@ -77,4 +76,3 @@ Scales1.add(tomat1);
 Scales1.add(tomat2);
 
 console.log( "Sum: " + Scales1.getSumScale() );
-console.log( "Names: " + Scales1.getNameList() );

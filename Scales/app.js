@@ -26,6 +26,13 @@ var Scales = /** @class */ (function () {
         //this.products.forEach( prod => {sum += prod.getScale()} );
         return sum;
     };
+    Scales.prototype.getNameList = function () {
+        var names = [];
+        for (var i = 0; i < this.products.length; i++) {
+            names.push(this.products[i].getName());
+        }
+        return names;
+    };
     return Scales;
 }());
 var Product = /** @class */ (function () {
@@ -65,26 +72,5 @@ Scales1.add(apple2);
 Scales1.add(tomat1);
 Scales1.add(tomat2);
 console.log("Sum: " + Scales1.getSumScale());
-/*
-car1.show();
-car1.start(100);
-car1.show();
-car1.stop();
-car1.show();
-
-car1.beep();
-
-let ship1:Ship=new Ship();
-
-ship1.show();
-ship1.setSail(true);
-ship1.show();
-ship1.setSail(false);
-ship1.show();
-
-ship1.start(100);
-ship1.show();
-ship1.stop();
-ship1.show();
-*/ 
+console.log("Names: " + Scales1.getNameList());
 //# sourceMappingURL=app.js.map

@@ -1,6 +1,6 @@
 var Apple = /** @class */ (function () {
     function Apple(_scale) {
-        this.name = "apple";
+        this.name = "Apple";
         this.scale = _scale;
     }
     Apple.prototype.getScale = function () {
@@ -13,7 +13,7 @@ var Apple = /** @class */ (function () {
 }());
 var Tomat = /** @class */ (function () {
     function Tomat(_scale) {
-        this.name = "tomat";
+        this.name = "Tomat";
         this.scale = _scale;
     }
     Tomat.prototype.getScale = function () {
@@ -33,13 +33,12 @@ var Scales = /** @class */ (function () {
     };
     Scales.prototype.getSumScale = function () {
         var sum = 0;
+        /*for(let i=0;i<this.products.length;i++)
+        {
+           sum += this.products[i].getScale();
+        }*/
         this.products.forEach(function (prod) { sum += prod.getScale(); });
         return sum;
-    };
-    Scales.prototype.getNameList = function () {
-        var names = [];
-        this.products.forEach(function (prod) { names.push(prod.getName()); });
-        return names;
     };
     return Scales;
 }());
@@ -53,5 +52,4 @@ Scales1.add(apple2);
 Scales1.add(tomat1);
 Scales1.add(tomat2);
 console.log("Sum: " + Scales1.getSumScale());
-console.log("Names: " + Scales1.getNameList());
 //# sourceMappingURL=app.js.map

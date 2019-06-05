@@ -4,7 +4,7 @@ class Scales {
     add(product:Product):void {
         this.products.push(product);
     }
-    
+
     getSumScale():number {
         var sum:number = 0;
         for(let i=0;i<this.products.length;i++)
@@ -13,6 +13,15 @@ class Scales {
         }
         //this.products.forEach( prod => {sum += prod.getScale()} );
         return sum;
+    }
+
+    getNameList():Array<string> {
+        var names:Array<string> = [];
+        for(let i=0;i<this.products.length;i++)
+        { 
+            names.push( this.products[i].getName()) ;
+        }
+        return names;
     }
 }
 
@@ -63,3 +72,4 @@ Scales1.add(tomat1);
 Scales1.add(tomat2);
 
 console.log( "Sum: " + Scales1.getSumScale() );
+console.log( "Names: " + Scales1.getNameList() );
