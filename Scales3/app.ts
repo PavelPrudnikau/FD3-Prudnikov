@@ -1,19 +1,19 @@
 
-interface IScalable {
+interface IStorageEngine {
 
-    getScale():void;
-    getName():void;
+    addItem(item:Product):void;
+    getItem(index:number):Product;
+    getCount():number;
 
 }
+class Product {
 
-class Apple implements IScalable {
+    private name: string;
+    private scale: number;
 
-    name: string;
-    scale: number;
-
-    constructor(_scale:number) {
-        this.name = "Apple";
-        this.scale = _scale;
+    constructor(_name:string, _scale:number) {
+        this.name=_name;
+        this.scale=_scale;
     }
 
     getScale():number {
@@ -22,57 +22,112 @@ class Apple implements IScalable {
 
     getName():string {
         return this.name;
-    }    
+    }
 }
 
-class Tomat implements IScalable {
+class ScalesStorageEngineArray implements IStorageEngine {
+    
+    products:Array<Product>=[];
 
-    name: string;
-    scale: number;
-
-    constructor(_scale:number) {
-        this.name = "Tomat";
-        this.scale = _scale;
-    }
-
-    getScale():number {
-        return this.scale;
-    }
-
-    getName():string {
-        return this.name;
-    }    
+    addItem(item: Product):void {
+        this.products.push(item);
+    };
+    getItem(index: number): Product{
+        return this.products[index];
+    };
+    getCount(): number{
+        return this.products.length;
+    };
 }
 
-class Scales {
-    products:Array<Apple|Tomat>=[];
 
-    add(product:Apple|Tomat):void {
-        this.products.push(product);
+class ScalesStorageEngineLocalStorage implements IStorageEngine {
+
+    LStorage:any;
+    
+    constructor (){
+        this.LStorage=window.localStorage;
+        this.LStorage.setItem('storageEngine', JSON.stringify([]));
+    }      
+
+    addItem(item:Product):void{
+        let myStorage  = this.LStorage.getItem ('storageEngine');
+        myStorage=JSON.parse(myStorage); 
+        myStorage.push(item);
+        
+        this.LStorage.setItem( 'storageEngine' , JSON.stringify(myStorage));
     }
     
-    getSumScale():number {
-        var sum:number = 0;
-        /*for(let i=0;i<this.products.length;i++)
-        { 
-           sum += this.products[i].getScale();
-        }*/
-        this.products.forEach( prod => {sum += prod.getScale()} );
+    getItem(index: number):Product{   
+        let myStorage  = this.LStorage.getItem ('storageEngine');
+        myStorage=JSON.parse(myStorage);           
+        // add methods           
+        return new Product (myStorage[index].name, myStorage[index].scale);
+    }
+
+    getCount():number{
+        let myStorage  = this.LStorage.getItem ('storageEngine');
+        myStorage=JSON.parse (myStorage);
+        
+        return myStorage.length;
+    }     
+}
+
+class Scales<StorageEngine extends IStorageEngine> {
+    
+    storage: StorageEngine;
+
+    constructor(_storage:StorageEngine) {
+        this.storage=_storage;
+    }
+
+    add(product:Product):void {
+        this.storage.addItem(product);
+    }
+
+    getSumScale():number{
+        let sum:number = 0;
+        let qnt:number = this.storage.getCount();
+        for(let i=0;i<qnt;i++)
+        {
+            let item=this.storage.getItem(i);
+            sum += item.getScale();
+        }
         return sum;
+    }
+
+    getNameList():Array<string>{
+        var names:Array<string> = [];
+        let qnt:number = this.storage.getCount();
+        for(let i=0;i<qnt;i++)
+        { 
+            let item=this.storage.getItem(i);
+            names.push(item.getName());
+        }
+        return names;
     }
 }
 
+let product0 = new Product('Product0', 1);
+let product1 = new Product('Product1', 2);
+let product2 = new Product('Product2', 3);
+let product3 = new Product('Product3', 4);
 
-let apple1:Apple=new Apple(1);
-let apple2:Apple=new Apple(2);
-let tomat1:Apple=new Tomat(1);
-let tomat2:Apple=new Tomat(2);
+let scales1 = new Scales(new ScalesStorageEngineArray);
+scales1.add(product0);
+scales1.add(product1);
+scales1.add(product2);
+scales1.add(product3);
 
-let Scales1:Scales = new Scales();
+console.log("Sum_Array: "   + scales1.getSumScale());
+console.log("Names_Array: " + scales1.getNameList());
 
-Scales1.add(apple1);
-Scales1.add(apple2);
-Scales1.add(tomat1);
-Scales1.add(tomat2);
+let scales2 = new Scales(new ScalesStorageEngineLocalStorage);
 
-console.log( "Sum: " + Scales1.getSumScale() );
+scales2.add(product0);
+scales2.add(product1);
+scales2.add(product2);
+scales2.add(product3);
+
+console.log("Sum_LS: "   + scales2.getSumScale());
+console.log("Names_LS: " + scales2.getNameList());
