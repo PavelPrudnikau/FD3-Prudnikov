@@ -1,7 +1,7 @@
 interface IScalable {
 
-    getScale():void;
-    getName():void;
+    getScale():number;
+    getName():string;
 
 }
 
@@ -44,9 +44,10 @@ class Tomat implements IScalable {
 }
 
 class Scales {
-    products:Array<Apple|Tomat>=[];
+    //products:Array<Apple|Tomat>=[];
+    products:IScalable[]=[];
 
-    add(product:Apple|Tomat):void {
+    add(product:IScalable):void {
         this.products.push(product);
     }
     

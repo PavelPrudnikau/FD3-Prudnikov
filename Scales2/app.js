@@ -26,6 +26,7 @@ var Tomat = /** @class */ (function () {
 }());
 var Scales = /** @class */ (function () {
     function Scales() {
+        //products:Array<Apple|Tomat>=[];
         this.products = [];
     }
     Scales.prototype.add = function (product) {
