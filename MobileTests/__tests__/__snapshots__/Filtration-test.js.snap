@@ -76,7 +76,7 @@ exports[`работа Filtration 1`] = `
         </td>
         <td>
           <input
-            className="button"
+            className="EditButton"
             onClick={[Function]}
             type="button"
             value="Редактировать"
@@ -84,7 +84,7 @@ exports[`работа Filtration 1`] = `
         </td>
         <td>
           <input
-            className="button"
+            className="DeleteButton"
             onClick={[Function]}
             type="button"
             value="Удалить"
@@ -114,7 +114,7 @@ exports[`работа Filtration 1`] = `
         </td>
         <td>
           <input
-            className="button"
+            className="EditButton"
             onClick={[Function]}
             type="button"
             value="Редактировать"
@@ -122,7 +122,7 @@ exports[`работа Filtration 1`] = `
         </td>
         <td>
           <input
-            className="button"
+            className="DeleteButton"
             onClick={[Function]}
             type="button"
             value="Удалить"
@@ -152,7 +152,7 @@ exports[`работа Filtration 1`] = `
         </td>
         <td>
           <input
-            className="button"
+            className="EditButton"
             onClick={[Function]}
             type="button"
             value="Редактировать"
@@ -160,7 +160,7 @@ exports[`работа Filtration 1`] = `
         </td>
         <td>
           <input
-            className="button"
+            className="DeleteButton"
             onClick={[Function]}
             type="button"
             value="Удалить"
@@ -190,7 +190,7 @@ exports[`работа Filtration 1`] = `
         </td>
         <td>
           <input
-            className="button"
+            className="EditButton"
             onClick={[Function]}
             type="button"
             value="Редактировать"
@@ -198,7 +198,7 @@ exports[`работа Filtration 1`] = `
         </td>
         <td>
           <input
-            className="button"
+            className="DeleteButton"
             onClick={[Function]}
             type="button"
             value="Удалить"
@@ -209,7 +209,7 @@ exports[`работа Filtration 1`] = `
   </table>
   <br />
   <input
-    className="button"
+    className="addButton"
     onClick={[Function]}
     type="button"
     value="Добавить клиента"
@@ -294,7 +294,7 @@ exports[`работа Filtration 2`] = `
         </td>
         <td>
           <input
-            className="button"
+            className="EditButton"
             onClick={[Function]}
             type="button"
             value="Редактировать"
@@ -302,7 +302,7 @@ exports[`работа Filtration 2`] = `
         </td>
         <td>
           <input
-            className="button"
+            className="DeleteButton"
             onClick={[Function]}
             type="button"
             value="Удалить"
@@ -332,7 +332,7 @@ exports[`работа Filtration 2`] = `
         </td>
         <td>
           <input
-            className="button"
+            className="EditButton"
             onClick={[Function]}
             type="button"
             value="Редактировать"
@@ -340,7 +340,7 @@ exports[`работа Filtration 2`] = `
         </td>
         <td>
           <input
-            className="button"
+            className="DeleteButton"
             onClick={[Function]}
             type="button"
             value="Удалить"
@@ -370,7 +370,7 @@ exports[`работа Filtration 2`] = `
         </td>
         <td>
           <input
-            className="button"
+            className="EditButton"
             onClick={[Function]}
             type="button"
             value="Редактировать"
@@ -378,7 +378,7 @@ exports[`работа Filtration 2`] = `
         </td>
         <td>
           <input
-            className="button"
+            className="DeleteButton"
             onClick={[Function]}
             type="button"
             value="Удалить"
@@ -389,7 +389,7 @@ exports[`работа Filtration 2`] = `
   </table>
   <br />
   <input
-    className="button"
+    className="addButton"
     onClick={[Function]}
     type="button"
     value="Добавить клиента"
@@ -474,7 +474,7 @@ exports[`работа Filtration 3`] = `
         </td>
         <td>
           <input
-            className="button"
+            className="EditButton"
             onClick={[Function]}
             type="button"
             value="Редактировать"
@@ -482,7 +482,7 @@ exports[`работа Filtration 3`] = `
         </td>
         <td>
           <input
-            className="button"
+            className="DeleteButton"
             onClick={[Function]}
             type="button"
             value="Удалить"
@@ -512,7 +512,7 @@ exports[`работа Filtration 3`] = `
         </td>
         <td>
           <input
-            className="button"
+            className="EditButton"
             onClick={[Function]}
             type="button"
             value="Редактировать"
@@ -520,7 +520,7 @@ exports[`работа Filtration 3`] = `
         </td>
         <td>
           <input
-            className="button"
+            className="DeleteButton"
             onClick={[Function]}
             type="button"
             value="Удалить"
@@ -550,7 +550,7 @@ exports[`работа Filtration 3`] = `
         </td>
         <td>
           <input
-            className="button"
+            className="EditButton"
             onClick={[Function]}
             type="button"
             value="Редактировать"
@@ -558,7 +558,7 @@ exports[`работа Filtration 3`] = `
         </td>
         <td>
           <input
-            className="button"
+            className="DeleteButton"
             onClick={[Function]}
             type="button"
             value="Удалить"
@@ -588,7 +588,7 @@ exports[`работа Filtration 3`] = `
         </td>
         <td>
           <input
-            className="button"
+            className="EditButton"
             onClick={[Function]}
             type="button"
             value="Редактировать"
@@ -596,7 +596,7 @@ exports[`работа Filtration 3`] = `
         </td>
         <td>
           <input
-            className="button"
+            className="DeleteButton"
             onClick={[Function]}
             type="button"
             value="Удалить"
@@ -607,7 +607,7 @@ exports[`работа Filtration 3`] = `
   </table>
   <br />
   <input
-    className="button"
+    className="addButton"
     onClick={[Function]}
     type="button"
     value="Добавить клиента"
@@ -692,7 +692,7 @@ exports[`работа Filtration 4`] = `
         </td>
         <td>
           <input
-            className="button"
+            className="EditButton"
             onClick={[Function]}
             type="button"
             value="Редактировать"
@@ -700,7 +700,7 @@ exports[`работа Filtration 4`] = `
         </td>
         <td>
           <input
-            className="button"
+            className="DeleteButton"
             onClick={[Function]}
             type="button"
             value="Удалить"
@@ -711,7 +711,7 @@ exports[`работа Filtration 4`] = `
   </table>
   <br />
   <input
-    className="button"
+    className="addButton"
     onClick={[Function]}
     type="button"
     value="Добавить клиента"

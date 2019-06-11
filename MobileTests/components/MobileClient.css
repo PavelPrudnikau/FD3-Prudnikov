@@ -19,3 +19,17 @@ tr.MobileClient
 {
   background-color: red;
 }
+
+.EditButton {
+
+  padding: 7px 15px;
+  text-align: center;
+  font-size: 14px;
+}
+
+.DeleteButton {
+
+  padding: 7px 15px;
+  text-align: center;
+  font-size: 14px;
+}

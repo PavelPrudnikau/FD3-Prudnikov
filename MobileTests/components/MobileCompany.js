@@ -170,7 +170,7 @@ class MobileCompany extends React.PureComponent {
           <tbody>{clientsCode}</tbody>
         </table>
         <br/> 
-        <input type="button" className='button' value="Добавить клиента" onClick={this.addClient} />
+        <input type="button" className='addButton' value="Добавить клиента" onClick={this.addClient} />
         <br/>
           {this.state.clientInfoMode!=0 &&
               <ClientInfo

@@ -74,30 +74,30 @@ class ClientInfo extends React.PureComponent {
                 <br/>
                 <label>
                     <span>Фамилия: </span>
-                    {this.props.clientInfoMode==1 && <input type='text' ref={this.setNewFamilyRef}/>}
+                    {this.props.clientInfoMode==1 && <input id='family' type='text' ref={this.setNewFamilyRef}/>}
                     {this.props.clientInfoMode==2 && <input type='text' defaultValue={this.state.actualClient.fam} ref={this.setNewFamilyRef}/>}
                 </label>
                 <br/>
                 <label>
                     <span>Имя: </span>
-                    {this.props.clientInfoMode==1 && <input type='text' ref={this.setNewNameRef}/>}
+                    {this.props.clientInfoMode==1 && <input id='name'  type='text' ref={this.setNewNameRef}/>}
                     {this.props.clientInfoMode==2 && <input type='text' defaultValue={this.state.actualClient.im} ref={this.setNewNameRef}/>}
                 </label>
                 <br/>
                 <label>
                     <span>Отчевство: </span>
-                    {this.props.clientInfoMode==1 && <input type='text' ref={this.setNewOtchRef}/>}
+                    {this.props.clientInfoMode==1 && <input id='otch'  type='text' ref={this.setNewOtchRef}/>}
                     {this.props.clientInfoMode==2 && <input type='text' defaultValue={this.state.actualClient.otch} ref={this.setNewOtchRef}/>}
                 </label>
                 <br/>
                 <label>
                     <span>Баланс: </span>
-                    {this.props.clientInfoMode==1 && <input type='text' ref={this.setNewBalanceRef}/>}
+                    {this.props.clientInfoMode==1 && <input id='balance'  type='text' ref={this.setNewBalanceRef}/>}
                     {this.props.clientInfoMode==2 && <input type='text' defaultValue={this.state.actualClient.balance} ref={this.setNewBalanceRef}/>}
 
                 </label>
                 <br/>
-                {this.props.clientInfoMode==1 && <input type='button' value="Add"  onClick={this.save} />}
+                {this.props.clientInfoMode==1 && <input id='addNewClient' type='button' value="Add"  onClick={this.save} />}
                 {this.props.clientInfoMode==2 && <input type='button' value="Save" onClick={this.save} />}
                 <input type='button' value="Cancel" onClick={this.cancel} />
             </div>

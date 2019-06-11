@@ -39,7 +39,26 @@
   font-size: 14px;
 }
 
+.addButton {
 
+  padding: 7px 15px;
+  text-align: center;
+  font-size: 14px;
+}
+
+.EditButton {
+
+  padding: 7px 15px;
+  text-align: center;
+  font-size: 14px;
+}
+
+.DeleteButton {
+
+  padding: 7px 15px;
+  text-align: center;
+  font-size: 14px;
+}
 
 
 
